@@ -1,0 +1,23 @@
+{
+  "name": "px-sync",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "m.j.graham@live.co.uk",
+  "license": "ISC",
+  "dependencies": {
+    "nhsuk-frontend": "^4.0.0"
+  },
+  "devDependencies": {
+    "del": "^6.0.0",
+    "gulp": "^4.0.2",
+    "gulp-sass": "^4.1.0"
+  }
+}

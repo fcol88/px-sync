@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Synchronise your prescriptions{% endblock %}
+
+{% block pagetitle %}Synchronise your prescriptions{% endblock %}
+
+{% block content %}
+
+<p class="nhsuk-body">This service can be used to synchronise repeat prescriptions if you receive them at different
+    times. After you have entered all of the information needed to synchronise your prescriptions, a prescription
+    synchronisation request will be generated that you can give to your GP or other dispensing body.</p>
+
+<h2 class="nhsuk-heading-l">What kinds of prescription can be synchronised?</h2>
+
+<p class="nhsuk-body">Right now, this service is a proof of concept and can be used for tablets, capsules and other
+    "solid-form" medications. It isn't recommended that you use this service for inhalers, creams and other "on-demand"
+    medications which are more difficult to synchronise.</p>
+
+<h2 class="nhsuk-heading-l">Before you start</h2>
+
+<p class="nhsuk-body">Before you start, you'll need:</p>
+
+<ul class="nhsuk-list nhsuk-list--bullet">
+    <li>The names of the drugs on each of your prescriptions (as written on the prescription)</li>
+    <li>The quantity of the drugs on each of your prescriptions</li>
+    <li>The period which your prescription covers (i.e. the repeat cycle)</li>
+</ul>
+
+<a class="nhsuk-button" href="prescriptions/reference">Start now</a>
+
+<h2 class="nhsuk-body">If you've used this service before</h2>
+
+<p class="nhsuk-body">If you started creating a synchronisation request in the past, you should have made a note of your
+    reference number. To continue with your synchronisation request, or to view your completed synchronisation request,
+    you can enter it below.</p>
+
+<form action="/prescriptions/resume" method="POST">
+
+    <div class="nhsuk-form-group">
+        <label class="nhsuk-label" for="reference">What is your reference number?</label>
+        <div class="nhsuk-hint" id="reference-hint">Your reference number is made up of 6 characters which may be
+            numbers or letters. For example, AA00A1.</div>
+        <input class="nhsuk-input nhsuk-input--width-10" id="reference" name="reference" type="text">
+    </div>
+
+    <button class="nhsuk-button nhsuk-button--secondary" type="submit">Submit</button>
+
+</form>
+
+{% endblock %}

@@ -1,4 +1,4 @@
 from django.shortcuts import render
 
-def test(request):
-    return render(request, 'prescriptions/test.html')
+def landing(request):
+    return render(request, 'prescriptions/landing.html')

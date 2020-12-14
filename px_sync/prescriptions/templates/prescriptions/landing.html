@@ -6,6 +6,24 @@
 
 {% block content %}
 
+{% if found != 'found' %}
+<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="nhsuk-error-summary__body">
+        <p>There is a problem with the reference number you entered.
+        </p>
+        <ul class="nhsuk-list nhsuk-error-summary__list">
+            <li>
+                <a href="#reference">No prescription sync request found. Double check your provided reference and try
+                    again.</a>
+            </li>
+        </ul>
+    </div>
+</div>
+{% endif %}
+
 <p class="nhsuk-body">This service can be used to synchronise repeat prescriptions if you receive them at different
     times. After you have entered all of the information needed to synchronise your prescriptions, a prescription
     synchronisation request will be generated that you can give to your GP or other dispensing body.</p>
@@ -26,7 +44,7 @@
     <li>The period which your prescription covers (i.e. the repeat cycle)</li>
 </ul>
 
-<a class="nhsuk-button" href="prescriptions/reference">Start now</a>
+<a class="nhsuk-button" href="reference">Start now</a>
 
 <h2 class="nhsuk-body">If you've used this service before</h2>
 
@@ -34,13 +52,20 @@
     reference number. To continue with your synchronisation request, or to view your completed synchronisation request,
     you can enter it below.</p>
 
-<form action="/prescriptions/resume" method="POST">
-
-    <div class="nhsuk-form-group">
+<form action="{% url 'resume' %}" method="POST">
+    {% csrf_token %}
+    <div class="nhsuk-form-group {% if found != 'found' %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label" for="reference">What is your reference number?</label>
         <div class="nhsuk-hint" id="reference-hint">Your reference number is made up of 6 characters which may be
             numbers or letters. For example, AA00A1.</div>
-        <input class="nhsuk-input nhsuk-input--width-10" id="reference" name="reference" type="text">
+        {% if found != 'found' %}
+        <span class="nhsuk-error-message" id="reference-error">
+            <span class="nhsuk-u-visually-hidden">Error:</span> No prescription sync request found. Double check your
+            provided reference and try
+            again.
+        </span>
+        {% endif %}
+        <input class="nhsuk-input nhsuk-input--width-10 {% if found != 'found' %}nhsuk-input--error{% endif %}" id="reference" name="reference" type="text">
     </div>
 
     <button class="nhsuk-button nhsuk-button--secondary" type="submit">Submit</button>

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block title %}Your unique reference{% endblock %}
+
+{% block pagetitle %}Your unique reference{% endblock %}
+
+{% block content %}
+
+<p class="nhsuk-body">Your unique reference for this service is:</p>
+
+<p class="nhsuk-u-font-size-48 nhsuk-u-font-weight-bold">{{ reference }}</p>
+
+<div class="nhsuk-warning-callout">
+    <h3 class="nhsuk-warning-callout__label">
+        <span role="text">
+            <span class="nhsuk-u-visually-hidden">Important: </span>
+            Make a note of your reference
+        </span>
+    </h3>
+    <p>You'll need this reference to give to your GP. You'll also need it for retrieving the information you've provided
+        if you return to this service.</p>
+</div>
+
+<form action="{% url 'resume' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="reference" value="{{ reference }}"/>
+    <button class="nhsuk-button" type="submit">Continue</button>
+
+</form>
+
+{% endblock %}

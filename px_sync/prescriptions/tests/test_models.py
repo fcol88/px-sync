@@ -1,7 +1,7 @@
 from django.test import TestCase
-from prescriptions.models import SyncRequest, Prescription, Quantity, Drug
+from ..models import SyncRequest, Prescription, Quantity, Drug
 
-class PrescriptionTests(TestCase):
+class ModelTests(TestCase):
     def setUp(self):
         pass
 
@@ -9,6 +9,17 @@ class PrescriptionTests(TestCase):
 
         syncRequest = SyncRequest()
         self.assertIsInstance(syncRequest, SyncRequest)
+
+    def test_syncrequest_sets_created_date(self):
+
+        syncRequest = SyncRequest()
+        syncRequest.reference = 'TEST01'
+
+        self.assertIsNone(syncRequest.created)
+
+        syncRequest.save()
+
+        self.assertIsNotNone(syncRequest.created)
 
     def test_prescription_instantiates(self):
 

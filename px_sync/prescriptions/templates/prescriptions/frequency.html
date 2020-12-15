@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}How often do you receive your prescription?{% endblock %}
+{% block pagetitle %}<label for="frequency">How often do you receive your prescription?</label>{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="nhsuk-error-summary__body">
+        <p>There is a problem with the frequency you entered.
+        </p>
+        <ul class="nhsuk-list nhsuk-error-summary__list">
+            {% for message in messages %}
+            <li>
+                <a href="#frequency">
+                    {{ message }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<form action="{% url 'frequency' %}" method="POST">
+
+    <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
+        <div class="nhsuk-hint" id="frequency-hint">
+            Enter the frequency, in days, of your prescription. For example, if you're issued one every 4 weeks, enter
+            28.
+        </div>
+        {% if messages %}
+        <span class="nhsuk-error-message" id="reference-error">
+            {% for message in messages %}
+            <span class="nhsuk-u-visually-hidden">Error:</span>{{ error }}
+            {% endfor %}
+        </span>
+        {% endif %}
+        <input class="nhsuk-input nhsuk-input--width-3" id="frequency" name="frequency" type="number"
+            aria-describedby="frequency-hint {% if messages %}reference-error{% endif %}">
+    </div>
+
+    <button class="nhsuk-button" type="submit"></button>
+
+</form>
+
+{% endblock %}

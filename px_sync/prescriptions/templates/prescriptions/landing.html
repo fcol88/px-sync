@@ -6,7 +6,7 @@
 
 {% block content %}
 
-{% if found != 'found' %}
+{% if status != 'ok' %}
 <div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
     <h2 class="nhsuk-error-summary__title" id="error-summary-title">
         There is a problem
@@ -16,8 +16,13 @@
         </p>
         <ul class="nhsuk-list nhsuk-error-summary__list">
             <li>
-                <a href="#reference">No prescription sync request found. Double check your provided reference and try
-                    again.</a>
+                <a href="#reference">
+                    {% if status == 'notfound' %}No prescription sync request found. Double check your provided
+                    reference and try
+                    again.
+                    {% elif status == 'timeout' %}Your session has timed out. Please enter your reference again to
+                    resume.
+                    {% endif %}</a>
             </li>
         </ul>
     </div>
@@ -44,7 +49,7 @@
     <li>The period which your prescription covers (i.e. the repeat cycle)</li>
 </ul>
 
-<a class="nhsuk-button" href="reference">Start now</a>
+<a class="nhsuk-button" href="{% url 'reference' %}">Start now</a>
 
 <h2 class="nhsuk-body">If you've used this service before</h2>
 
@@ -54,21 +59,24 @@
 
 <form action="{% url 'resume' %}" method="POST">
     {% csrf_token %}
-    <div class="nhsuk-form-group {% if found != 'found' %}nhsuk-form-group--error{% endif %}">
+    <div class="nhsuk-form-group {% if status != 'ok' %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label" for="reference">What is your reference number?</label>
         <div class="nhsuk-hint" id="reference-hint">Your reference number is made up of 6 characters which may be
             numbers or letters. For example, AA00A1.</div>
         {% if found != 'found' %}
         <span class="nhsuk-error-message" id="reference-error">
-            <span class="nhsuk-u-visually-hidden">Error:</span> No prescription sync request found. Double check your
-            provided reference and try
+            <span class="nhsuk-u-visually-hidden">Error:</span>{% if status == 'notfound' %}No prescription sync request
+            found. Double check your provided reference and try
             again.
+            {% elif status == 'timeout' %}Your session has timed out. Please enter your reference again to resume.
+            {% endif %}
         </span>
         {% endif %}
-        <input class="nhsuk-input nhsuk-input--width-10 {% if found != 'found' %}nhsuk-input--error{% endif %}" id="reference" name="reference" type="text">
+        <input class="nhsuk-input nhsuk-input--width-10 {% if status != 'ok' %}nhsuk-input--error{% endif %}"
+            id="reference" name="reference" type="text" aria-describedby="reference-hint {% if status != 'ok' %}reference-error{% endif %}">
     </div>
 
-    <button class="nhsuk-button nhsuk-button--secondary" type="submit">Submit</button>
+    <button class="nhsuk-button nhsuk-button--secondary" type="submit">Continue</button>
 
 </form>
 

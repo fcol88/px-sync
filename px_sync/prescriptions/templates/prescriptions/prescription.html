@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Add the items on your prescription{% endblock %}
+{% block pagetitle %}Add the items on your prescription{% endblock %}
+
+{% block content %}
+
+<p class="nhsuk-body">Some text explaining this page</p>
+
+{% if prescription.quantity_set.all %}
+<table role="table" class="nhsuk-table-responsive">
+    <caption class="nhsuk-table__caption">Your prescription items</caption>
+    <thead role="rowgroup" class="nhsuk-table__head">
+        <tr role="row">
+            <th role="columnheader" class="" scope="col">
+                Drug name
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Dosage
+            </th>
+            <th role="columnheader" class="" scope="col">
+                In stock
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Action
+            </th>
+        </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+        {% for quantity in prescription.quantity_set.all %}
+        <tr role="row" class="nhsuk-table__row">
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Drug name </span> {{ quantity.drug.name }}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Prescribed amount </span>
+                {{ quantity.prescribed }}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">In stock </span>
+                {{ quantity.inStock }}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Action </span>
+                <a href="{% url 'itemname' id=quantity.id %}">Edit</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+<a class="nhsuk-button nhsuk-button--secondary" href="{% url 'itemname' %}">Add item</a>
+
+<p class="nhsuk-body">
+    A little something explaining that you can't continue until you've added at least one item.
+</p>
+
+<a class="nhsuk-button" href="{% url 'checkitems' id=prescription.id %}">Continue</a>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}Tell us about the item on your prescription{% endblock %}
+{% block pagetitle %}Tell us about the item on your prescription{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="nhsuk-error-summary__body">
+        <p>There is a problem with the drug name you entered.
+        </p>
+        <ul class="nhsuk-list nhsuk-error-summary__list">
+            {% for message in messages %}
+            <li>
+                <a href="#drugname">
+                    {{ message }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<form action="{% url 'itemname' %}" method="POST">
+    {% csrf_token %}
+    <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label" for="drugname">What is the name of the drug?</label>
+        <div class="nhsuk-hint" id="drugname-hint">
+            Please be as accurate as you can – write this exactly as it is on the printed label from your pharmacy.
+        </div>
+        {% if messages %}
+        <span class="nhsuk-error-message" id="drugname-error">
+            {% for message in messages %}
+            <span class="nhsuk-u-visually-hidden">Error:</span>{{ message }}
+            {% endfor %}
+        </span>
+        {% endif %}
+        <input class="nhsuk-input" id="drugname" name="drugname" type="text"
+            aria-describedby="drugname-hint {% if messages %}drugname-error{% endif %}">
+    </div>
+
+    <button class="nhsuk-button" type="submit">Save</button>
+
+</form>
+
+{% endblock %}

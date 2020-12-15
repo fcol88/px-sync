@@ -15,7 +15,7 @@ class Prescription(models.Model):
 # Quantity.required = the computed amount required
 class Quantity(models.Model):
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
-    prescribed = models.SmallIntegerField(default=0)
+    prescribed = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     inStock = models.SmallIntegerField(default=0)
     required = models.SmallIntegerField(default=0)
     drug = models.ForeignKey('Drug', on_delete=models.CASCADE)

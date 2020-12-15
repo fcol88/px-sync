@@ -25,8 +25,13 @@
 </div>
 {% endif %}
 
+{% if id %}
+<form action="{% url 'editfrequency' id=id %}" method="POST">
+{% else %}
 <form action="{% url 'frequency' %}" method="POST">
+{% endif %}
 
+    {% csrf_token %}
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
         <div class="nhsuk-hint" id="frequency-hint">
             Enter the frequency, in days, of your prescription. For example, if you're issued one every 4 weeks, enter
@@ -35,7 +40,7 @@
         {% if messages %}
         <span class="nhsuk-error-message" id="reference-error">
             {% for message in messages %}
-            <span class="nhsuk-u-visually-hidden">Error:</span>{{ error }}
+            <span class="nhsuk-u-visually-hidden">Error:</span>{{ message }}
             {% endfor %}
         </span>
         {% endif %}
@@ -43,7 +48,7 @@
             aria-describedby="frequency-hint {% if messages %}reference-error{% endif %}">
     </div>
 
-    <button class="nhsuk-button" type="submit"></button>
+    <button class="nhsuk-button" type="submit">Save</button>
 
 </form>
 

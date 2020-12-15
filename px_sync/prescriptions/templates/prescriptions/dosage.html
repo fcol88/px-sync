@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}Tell us about the item on your prescription{% endblock %}
+{% block pagetitle %}Tell us about the item on your prescription{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="nhsuk-error-summary__body">
+        <p>There is a problem with the information you entered.
+        </p>
+        <ul class="nhsuk-list nhsuk-error-summary__list">
+            {% for message in messages %}
+            <li>
+                <a href="#period">
+                    {{ message }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+{% if id %}
+<form action="{% url 'editdosage' prescriptionId=prescriptionId drugId=drugId id=id %}" method="POST">
+{% else %}
+<form action="{% url 'dosage' prescriptionId=prescriptionId drugId=drugId %}" method="POST">
+{% endif %}
+
+    {% csrf_token %}
+
+    <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
+
+        <fieldset class="nhsuk-fieldset" aria-describedby="period-hint {% for message in messages %}dosage-error{{ loop.index }}{% endfor %}" id="period">
+            <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
+                What is your dosage measured in?
+            </legend>
+
+            <div class="nhsuk-hint" id="period-hint">
+                Select one option
+            </div>
+
+            {% for message in messages %}
+            <span class="nhsuk-error-message" id="dosage-error{{ loop.index }}">
+                <span class="nhsuk-u-visually-hidden">Error:</span> {{ message }}
+            </span>
+            {% endfor %}
+
+            <div class="nhsuk-radios nhsuk-radios--conditional">
+
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="period-days" name="period" type="radio" value="1"
+                        aria-controls="conditional-period-days" aria-expanded="false">
+                    <label class="nhsuk-label nhsuk-radios__label" for="period-days">
+                        Days
+                    </label>
+                </div>
+
+                <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-period-days">
+
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" for="dosage-days">
+                            How much of this item do you take per day?
+                        </label>
+                        <input class="nhsuk-input nhsuk-u-width-two-thirds" id="dosage-days" name="dosage-days"
+                            type="number">
+                    </div>
+
+                </div>
+
+                <div class="nhsuk-radios__item">
+                    <input class="nhsuk-radios__input" id="period-weeks" name="period" type="radio" value="7"
+                        aria-controls="conditional-period-weeks" aria-expanded="false">
+                    <label class="nhsuk-label nhsuk-radios__label" for="period-weeks">
+                        Weeks
+                    </label>
+                </div>
+
+                <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-period-weeks">
+
+                    <div class="nhsuk-form-group">
+                        <label class="nhsuk-label" for="dosage-weeks">
+                            How much of this item do you take per week?
+                        </label>
+                        <input class="nhsuk-input nhsuk-u-width-two-thirds" id="dosage-weeks" name="dosage-weeks"
+                            type="number">
+                    </div>
+
+                </div>
+
+            </div>
+        </fieldset>
+
+    </div>
+
+    <button class="nhsuk-button" type="submit">Next</button>
+
+</form>
+
+{% endblock %}

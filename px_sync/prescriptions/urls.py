@@ -13,8 +13,9 @@ urlpatterns = [
     path('frequency/<int:id>', views.prescription_frequency, name="editfrequency"),
     path('itemname/<int:prescriptionId>', views.item_name, name="itemname"),
     path('itemname/<int:prescriptionId>/<int:id>', views.item_name, name="edititemname"),
-    path('dosage/<int:prescriptionId>/<int:drugId>', views.item_name, name="dosage"),
-    path('dosage/<int:prescriptionId>/<int:drugId>/<int:id>', views.item_name, name="editdosage"),
+    path('dosage/<int:prescriptionId>/<int:drugId>', views.dosage, name="dosage"),
+    path('dosage/<int:prescriptionId>/<int:drugId>/<int:id>', views.dosage, name="editdosage"),
+    path('stock/<int:id>', views.stock, name="stock"),
     path('checkitems/<int:id>', views.check_items, name="checkitems"),
     path('calculate', views.calculate, name='calculate'),
 ]

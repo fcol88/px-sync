@@ -3,6 +3,7 @@ from django.contrib import messages
 from .reference_service import get_reference, reference_exists
 from .models import SyncRequest, Prescription, Quantity, Drug
 from datetime import datetime
+from math import ceil
 
 def landing(request, status = "ok"):
 
@@ -63,7 +64,6 @@ def prescription_frequency(request, id=None):
         
         if frequency is None:
             messages.add_message(request, messages.WARNING, "Enter a frequency")
-            return render(request, 'prescriptions/frequency.html')
         else:
             try:
                 frequency = int(frequency)
@@ -71,10 +71,11 @@ def prescription_frequency(request, id=None):
                     messages.add_message(request, messages.WARNING, "Enter a lower frequency")
             except ValueError:
                 messages.add_message(request, messages.WARNING, "Enter a number")
-                return render(request, 'prescriptions/frequency.html')
 
-        if messages:
-            return render(request, 'prescriptions/frequency.html')
+        if messages.get_messages(request):
+            return render(request, 'prescriptions/frequency.html', {
+                'id' : id
+            })
 
         syncId = request.session['syncid']
         syncRequest = SyncRequest.objects.get(id=syncId)
@@ -96,7 +97,9 @@ def prescription_frequency(request, id=None):
 
         return redirect('prescription', id=prescription.id)
 
-    return render(request, 'prescriptions/frequency.html')
+    return render(request, 'prescriptions/frequency.html', {
+        'id' : id
+    })
 
 def view_prescription(request, id):
     
@@ -123,7 +126,10 @@ def item_name(request, prescriptionId, id=None):
 
         if drugName is None:
             messages.add_message(request, messages.WARNING, "Enter a drug name")
-            return render(request, 'prescriptions/drugname.html')
+            return render(request, 'prescriptions/drugname.html', {
+                'prescriptionId' : prescriptionId,
+                'id' : id
+            })
 
         syncId = request.session['syncid']
 
@@ -144,9 +150,15 @@ def item_name(request, prescriptionId, id=None):
 
         drug.save()
 
-        return redirect('dosage', prescriptionId=prescriptionId, drugId=drug.id, id=id)
+        if id is None:
+            return redirect('dosage', prescriptionId=prescriptionId, drugId=drug.id)
+        else:
+            return redirect('editdosage', prescriptionId=prescriptionId, drugId=drug.id, id=id)
 
-    return render(request, 'prescriptions/itemname.html')
+    return render(request, 'prescriptions/itemname.html', {
+        'prescriptionId' : prescriptionId,
+        'id' : id
+    })
 
 def dosage(request, prescriptionId, drugId, id=None):
 
@@ -155,13 +167,27 @@ def dosage(request, prescriptionId, drugId, id=None):
 
     if request.method == "POST":
 
-        dosage = request.POST.get('dosage', '')
+        dosage = None
         period = request.POST.get('period', '')
 
         if period is None:
             messages.add_message(request, messages.WARNING, "Choose a period")
-        elif period != 1 and period != 7:
+        elif period != "1" and period != "7":
             messages.add_message(request, messages.WARNING, "Choose a valid period")
+        else:
+            period = int(period)
+
+        if messages.get_messages(request):
+            return render(request, 'prescriptions/dosage.html', {
+                'prescriptionId' : prescriptionId,
+                'drugId' : drugId,
+                'id' : id
+            })
+
+        if period == 1:
+            dosage = request.POST.get('dosage-days', '')
+        else:
+            dosage = request.POST.get('dosage-weeks', '')
 
         if dosage is None:
             messages.add_message(request, messages.WARNING, "Enter a dosage")
@@ -173,8 +199,12 @@ def dosage(request, prescriptionId, drugId, id=None):
             except ValueError:
                 messages.add_message(request, messages.WARNING, "Enter a number")
 
-        if messages:
-            return render(request, 'prescriptions/dosage.html')
+        if messages.get_messages(request):
+            return render(request, 'prescriptions/dosage.html', {
+                'prescriptionId' : prescriptionId,
+                'drugId' : drugId,
+                'id' : id
+            })
 
         syncId = request.session['syncid']
         
@@ -190,14 +220,21 @@ def dosage(request, prescriptionId, drugId, id=None):
         else:
             quantity = Quantity.objects.get(id=id)
 
-        quantity.prescribed = dosage * period
+        dosePerDay = dosage / period
+
+        quantity.prescription = prescription
+        quantity.prescribed = dosePerDay
         quantity.drug = Drug.objects.get(id=drugId)
 
         quantity.save()
 
         return redirect('stock', id=quantity.id)
 
-    return render(request, 'prescriptions/dosage.html')
+    return render(request, 'prescriptions/dosage.html', {
+        'prescriptionId' : prescriptionId,
+        'drugId' : drugId,
+        'id' : id
+    })
 
 def stock(request, id):
 
@@ -216,8 +253,10 @@ def stock(request, id):
             except ValueError:
                 messages.add_message(request, messages.WARNING, "Enter a number")
         
-        if messages:
-            return render(request, 'prescriptions/stock.html')
+        if messages.get_messages(request):
+            return render(request, 'prescriptions/stock.html', {
+                'id' : id
+            })
 
         syncId = request.session['syncid']
 
@@ -226,13 +265,15 @@ def stock(request, id):
         if quantity.prescription.syncRequest.id != syncId or quantity is None:
             return not_found_redirect()
 
-        quantity.stock = calculate_stock_value(quantity, stock)
+        quantity.inStock = calculate_stock_value(quantity, stock)
 
         quantity.save()
 
         return redirect('prescription', id=quantity.prescription.id)
 
-    return render(request, 'prescriptions/stock.html')
+    return render(request, 'prescriptions/stock.html', {
+        'id' : id
+    })
 
 def check_items(request, id):
 
@@ -249,7 +290,7 @@ def check_items(request, id):
     if len(prescription.quantity_set.all) == 0:
         messages.add_message(request, messages.WARNING, "Each prescription must have at least one item")
 
-    if messages:
+    if messages.get_messages(request):
         return render(request, 'prescriptions/prescription.html', {
             'prescription' : prescription
         })
@@ -271,5 +312,5 @@ def calculate_stock_value(quantity, stock):
     maximum = quantity.prescription.frequency * quantity.prescribed
 
     if stock > maximum:
-        return maximum
+        return ceil(maximum)
     return stock

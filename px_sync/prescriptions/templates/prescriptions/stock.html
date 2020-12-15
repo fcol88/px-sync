@@ -11,12 +11,12 @@
         There is a problem
     </h2>
     <div class="nhsuk-error-summary__body">
-        <p>There is a problem with the drug name you entered.
+        <p>There is a problem with the stock you entered.
         </p>
         <ul class="nhsuk-list nhsuk-error-summary__list">
             {% for message in messages %}
             <li>
-                <a href="#drugname">
+                <a href="#stock">
                     {{ message }}</a>
             </li>
             {% endfor %}
@@ -25,30 +25,26 @@
 </div>
 {% endif %}
 
-{% if id %}
-<form action="{% url 'edititemname' prescriptionId=prescriptionId id=id %}" method="POST">
-{% else %}
-<form action="{% url 'itemname' prescriptionId=prescriptionId %}" method="POST">
-{% endif %}
-
+<form action="{% url 'stock' id=id %}" method="POST">
     {% csrf_token %}
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
-        <label class="nhsuk-label" for="drugname">What is the name of the drug?</label>
-        <div class="nhsuk-hint" id="drugname-hint">
-            Please be as accurate as you can – write this exactly as it is on the printed label from your pharmacy.
+        <label class="nhsuk-label" for="stock">How much of this do you have at home?</label>
+        <div class="nhsuk-hint" id="stock-hint">
+            Only include medicine which is in date. For example, if you have one full 28-pack of tablets and an open
+            pack with 7 tablets remaining, enter 35.
         </div>
         {% if messages %}
-        <span class="nhsuk-error-message" id="drugname-error">
+        <span class="nhsuk-error-message" id="stock-error">
             {% for message in messages %}
             <span class="nhsuk-u-visually-hidden">Error:</span>{{ message }}
             {% endfor %}
         </span>
         {% endif %}
-        <input class="nhsuk-input" id="drugname" name="drugname" type="text"
-            aria-describedby="drugname-hint {% if messages %}drugname-error{% endif %}">
+        <input class="nhsuk-input nhsuk-input--width-3" id="stock" name="stock" type="number"
+            aria-describedby="stock-hint {% if messages %}stock-error{% endif %}">
     </div>
 
-    <button class="nhsuk-button" type="submit">Next</button>
+    <button class="nhsuk-button" type="submit">Save</button>
 
 </form>
 

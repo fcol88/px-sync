@@ -45,7 +45,7 @@
         </span>
         {% endif %}
         <input class="nhsuk-input" id="drugname" name="drugname" type="text"
-            aria-describedby="drugname-hint {% if messages %}drugname-error{% endif %}">
+            aria-describedby="drugname-hint {% if messages %}drugname-error{% endif %}" value="{{ drugName }}">
     </div>
 
     <button class="nhsuk-button" type="submit">Next</button>

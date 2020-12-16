@@ -3,11 +3,9 @@ from django.contrib import messages
 from .reference_service import get_reference, reference_exists
 from .models import SyncRequest, Prescription, Quantity, Drug
 from datetime import datetime
-from math import ceil
+from math import ceil, floor
 
 def landing(request, status = "ok"):
-
-    request.session.set_expiry(60)
 
     return render(request, 'prescriptions/landing.html', {
         'status' : status
@@ -56,49 +54,59 @@ def list_prescriptions(request):
 def prescription_frequency(request, id=None):
     
     if request.session.get('syncid', None) is None:
-            return timeout_redirect()
+        return timeout_redirect()
+
+    syncId = request.session['syncid']
+    syncRequest = SyncRequest.objects.get(id=syncId)
+
+    if id is None:
+        prescription = Prescription()
+    else:
+        prescription = Prescription.objects.get(id=id)
+
+        if syncRequest.id != prescription.syncRequest.id:
+            return not_found_redirect()
 
     if request.method == "POST":
 
         frequency = request.POST.get('frequency', '')
         
-        if frequency is None:
+        if frequency == '':
             messages.add_message(request, messages.WARNING, "Enter a frequency")
         else:
             try:
                 frequency = int(frequency)
                 if frequency > 365:
                     messages.add_message(request, messages.WARNING, "Enter a lower frequency")
+                elif frequency < 1:
+                    messages.add_message(request, messages.WARNING, "Enter a number greater than 0")
             except ValueError:
                 messages.add_message(request, messages.WARNING, "Enter a number")
 
         if messages.get_messages(request):
             return render(request, 'prescriptions/frequency.html', {
-                'id' : id
+                'id' : id,
+                'frequency' : frequency
             })
-
-        syncId = request.session['syncid']
-        syncRequest = SyncRequest.objects.get(id=syncId)
-
-        prescription = None
-
-        if id is None:
-            prescription = Prescription()
-        else:
-            prescription = Prescription.objects.get(id=id)
-
-            if syncRequest.id != prescription.syncRequest.id:
-                return not_found_redirect()
 
         prescription.syncRequest = syncRequest
         prescription.frequency = frequency
 
         prescription.save()
 
-        return redirect('prescription', id=prescription.id)
+        if id is None:
+            return redirect('prescription', id=prescription.id)
+        else:
+            return redirect('prescriptions')
+
+    frequency = ''
+
+    if id is not None:
+        frequency = prescription.frequency
 
     return render(request, 'prescriptions/frequency.html', {
-        'id' : id
+        'id' : id,
+        'frequency' : frequency
     })
 
 def view_prescription(request, id):
@@ -120,57 +128,77 @@ def item_name(request, prescriptionId, id=None):
     if request.session.get('syncid', None) is None:
             return timeout_redirect()
 
+    syncId = request.session['syncid']
+    
+    prescription = Prescription.objects.get(id=prescriptionId)
+
+    if prescription.syncRequest.id != syncId:
+        return not_found_redirect()
+
+    drug = None
+    quantity = None
+
+    if id is None:
+        drug = Drug()
+        quantity = Quantity()
+    else:
+        quantity = Quantity.objects.get(id=id)
+        drug = quantity.drug
+        if quantity not in prescription.quantity_set.all():
+            return not_found_redirect()
+
     if request.method == "POST":
 
         drugName = request.POST.get('drugname', '')
 
-        if drugName is None:
+        if drugName == '':
             messages.add_message(request, messages.WARNING, "Enter a drug name")
-            return render(request, 'prescriptions/drugname.html', {
+
+        if messages.get_messages(request):
+            return render(request, 'prescriptions/itemname.html', {
                 'prescriptionId' : prescriptionId,
-                'id' : id
+                'id' : id,
+                'drugName' : drugName
             })
 
-        syncId = request.session['syncid']
-
-        prescription = Prescription.objects.get(id=prescriptionId)
-
-        if prescription.syncRequest.id != syncId:
-            return not_found_redirect()
-
-        drug = None
-
-        if id is None:
-            drug = Drug()
-        else:
-            quantity = Quantity.objects.get(id=id)
-            drug = quantity.drug
-
         drug.name = drugName
-
         drug.save()
 
-        if id is None:
-            return redirect('dosage', prescriptionId=prescriptionId, drugId=drug.id)
-        else:
-            return redirect('editdosage', prescriptionId=prescriptionId, drugId=drug.id, id=id)
+        quantity.drug = drug
+        quantity.prescription = prescription
+        quantity.save()
+
+        return redirect('dosage', id=quantity.id)
+
+    drugName = ''
+
+    if id is not None:
+        drugName = quantity.drug.name
 
     return render(request, 'prescriptions/itemname.html', {
         'prescriptionId' : prescriptionId,
-        'id' : id
+        'id' : id,
+        'drugName' : drugName
     })
 
-def dosage(request, prescriptionId, drugId, id=None):
+def dosage(request, id):
 
     if request.session.get('syncid', None) is None:
         return timeout_redirect()
+
+    syncId = request.session['syncid']
+
+    quantity = Quantity.objects.get(id=id)
+
+    if quantity.prescription.syncRequest.id != syncId:
+        return not_found_redirect()
 
     if request.method == "POST":
 
         dosage = None
         period = request.POST.get('period', '')
 
-        if period is None:
+        if period == '':
             messages.add_message(request, messages.WARNING, "Choose a period")
         elif period != "1" and period != "7":
             messages.add_message(request, messages.WARNING, "Choose a valid period")
@@ -179,8 +207,6 @@ def dosage(request, prescriptionId, drugId, id=None):
 
         if messages.get_messages(request):
             return render(request, 'prescriptions/dosage.html', {
-                'prescriptionId' : prescriptionId,
-                'drugId' : drugId,
                 'id' : id
             })
 
@@ -189,51 +215,40 @@ def dosage(request, prescriptionId, drugId, id=None):
         else:
             dosage = request.POST.get('dosage-weeks', '')
 
-        if dosage is None:
+        if dosage == '':
             messages.add_message(request, messages.WARNING, "Enter a dosage")
         else:
             try:
                 dosage = int(dosage)
                 if dosage > 1000:
                     messages.add_message(request, messages.WARNING, "Enter a lower dosage")
+                elif dosage < 1:
+                    messages.add_message(request, messages.WARNING, "Enter a dosage greater than 0")
             except ValueError:
                 messages.add_message(request, messages.WARNING, "Enter a number")
 
         if messages.get_messages(request):
             return render(request, 'prescriptions/dosage.html', {
-                'prescriptionId' : prescriptionId,
-                'drugId' : drugId,
-                'id' : id
+                'id' : id,
+                'dosage' : dosage,
+                'period' : period
             })
 
-        syncId = request.session['syncid']
-        
-        prescription = Prescription.objects.get(id=prescriptionId)
-
-        if prescription.syncRequest.id != syncId:
-            return not_found_redirect()
-
-        quantity = None
-
-        if id is None:
-            quantity = Quantity()
-        else:
-            quantity = Quantity.objects.get(id=id)
-
-        dosePerDay = dosage / period
-
-        quantity.prescription = prescription
-        quantity.prescribed = dosePerDay
-        quantity.drug = Drug.objects.get(id=drugId)
+        quantity.dosage = dosage
+        quantity.period = period
+        quantity.perDay = dosage / period
 
         quantity.save()
 
         return redirect('stock', id=quantity.id)
 
+    period = '' if quantity.period == -1 else quantity.period
+    dosage = '' if quantity.dosage == -1 else quantity.dosage
+
     return render(request, 'prescriptions/dosage.html', {
-        'prescriptionId' : prescriptionId,
-        'drugId' : drugId,
-        'id' : id
+        'id' : id,
+        'period' : period,
+        'dosage' : dosage
     })
 
 def stock(request, id):
@@ -241,29 +256,34 @@ def stock(request, id):
     if request.session.get('syncid', None) is None:
         return timeout_redirect()
 
+    syncId = request.session['syncid']
+    
+    quantity = Quantity.objects.get(id=id)
+
+    if quantity.prescription.syncRequest.id != syncId:
+        return not_found_redirect()
+
     if request.method == "POST":
 
         stock = request.POST.get('stock', '')
 
-        if stock is None:
+        if stock == '':
             messages.add_message(request, messages.WARNING, "Enter a stock")
         else:
             try:
                 stock = int(stock)
+                if stock > 1000:
+                    messages.add_message(request, messages.WARNING, "Enter a lower stock amount")
+                elif stock < 0:
+                    messages.add_message(request, messages.WARNING, "Enter a value greater than or equal to 0")
             except ValueError:
                 messages.add_message(request, messages.WARNING, "Enter a number")
         
         if messages.get_messages(request):
             return render(request, 'prescriptions/stock.html', {
-                'id' : id
+                'id' : id,
+                'stock' : stock
             })
-
-        syncId = request.session['syncid']
-
-        quantity = Quantity.objects.get(id=id)
-
-        if quantity.prescription.syncRequest.id != syncId or quantity is None:
-            return not_found_redirect()
 
         quantity.inStock = calculate_stock_value(quantity, stock)
 
@@ -271,8 +291,11 @@ def stock(request, id):
 
         return redirect('prescription', id=quantity.prescription.id)
 
+    stock = '' if quantity.inStock == -1 else quantity.inStock
+
     return render(request, 'prescriptions/stock.html', {
-        'id' : id
+        'id' : id,
+        'stock' : stock
     })
 
 def check_items(request, id):
@@ -287,8 +310,12 @@ def check_items(request, id):
     if prescription.syncRequest.id != syncId:
         return not_found_redirect()
 
-    if len(prescription.quantity_set.all) == 0:
-        messages.add_message(request, messages.WARNING, "Each prescription must have at least one item")
+    if len(prescription.quantity_set.all()) == 0:
+        messages.add_message(request, messages.WARNING, "Each prescription must have at least one item", "#addItem")
+    else:
+        for quantity in prescription.quantity_set.all():
+            if quantity.inStock == -1:
+                messages.add_message(request, messages.WARNING, "There is information missing from one of your items", "#editLink" + str(quantity.id))
 
     if messages.get_messages(request):
         return render(request, 'prescriptions/prescription.html', {
@@ -299,7 +326,66 @@ def check_items(request, id):
 
 
 def calculate(request):
-    pass
+    
+    if request.session.get('syncid', None) is None:
+        return timeout_redirect()
+
+    syncId = request.session['syncid']
+
+    syncRequest = SyncRequest.objects.get(id=syncId)
+
+    if len(syncRequest.prescription_set.all()) < 2:
+        messages.add_message(request, messages.WARNING, "Add at least two prescriptions to synchronise")
+
+    for prescription in syncRequest.prescription_set.all():
+        if len(prescription.quantity_set.all()) == 0:
+            messages.add_message(request, messages.WARNING, "Each prescription must have at least one item")
+
+    if messages.get_messages(request):
+        return render(request, 'prescriptions/prescriptions.html', {
+            'syncRequest' : syncRequest
+        })
+
+    maximum = 0
+    maxId = None
+
+    for prescription in syncRequest.prescription_set.all():
+
+        for quantity in prescription.quantity_set.all():
+
+            stockInDays = quantity.inStock / quantity.perDay
+
+            if stockInDays > maximum:
+                maxId = quantity.id
+                maximum = stockInDays
+
+    for prescription in syncRequest.prescription_set.all():
+
+        for quantity in prescription.quantity_set.all():
+
+            if quantity.id != maxId:
+                stockInDays = quantity.inStock / quantity.perDay
+                requiredAmount = (maximum - stockInDays) * quantity.perDay
+                roundedRequiredAmount = ceil(requiredAmount)
+                quantity.required = roundedRequiredAmount
+            else:
+                quantity.required = 0
+            quantity.save()
+
+    return redirect('syncrequest')
+
+def view_sync_request(request):
+    
+    if request.session.get('syncid', None) is None:
+        return timeout_redirect()
+
+    syncId = request.session['syncid']
+
+    syncRequest = SyncRequest.objects.get(id=syncId)
+
+    return render(request, 'prescriptions/syncrequest.html', {
+        'syncRequest' : syncRequest
+    })
 
 def timeout_redirect():
     return redirect('startwithstatus', status='timeout')
@@ -309,8 +395,9 @@ def not_found_redirect():
 
 def calculate_stock_value(quantity, stock):
 
-    maximum = quantity.prescription.frequency * quantity.prescribed
+    maximum = quantity.prescription.frequency * quantity.perDay
+    roundedMaximum = ceil(maximum)
 
-    if stock > maximum:
-        return ceil(maximum)
+    if stock > roundedMaximum:
+        return roundedMaximum
     return stock

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block title %}Your prescription synchronisation request{% endblock %}
+{% block pagetitle %}Your prescription synchronisation request{% endblock %}
+
+
+{% block content %}
+
+<table class="nhsuk-table">
+    <caption class="nhsuk-table__caption nhsuk-u-visually-hidden">Your prescription synchronisation request</caption>
+    <thead role="rowgroup" class="nhsuk-table__head">
+        <tr role="row">
+            <th role="columnheader" class="" scope="col">
+                Item name
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Quantity required
+            </th>
+        </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+        {% for prescription in syncRequest.prescription_set.all %}
+        {% for quantity in prescription.quantity_set.all %}
+        {% if quantity.required != 0 %}
+        <tr role="row" class="nhsuk-table__row">
+            <td class="nhsuk-table__cell">{{ quantity.drug.name }}</td>
+            <td class="nhsuk-table__cell ">{{ quantity.required }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 class="nhsuk-heading-l">What you should do now</h2>
+
+<p class="nhsuk-body">Some text explaining this page</p>
+
+{% endblock %}

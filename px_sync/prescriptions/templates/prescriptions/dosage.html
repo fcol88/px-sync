@@ -25,11 +25,7 @@
 </div>
 {% endif %}
 
-{% if id %}
-<form action="{% url 'editdosage' prescriptionId=prescriptionId drugId=drugId id=id %}" method="POST">
-{% else %}
-<form action="{% url 'dosage' prescriptionId=prescriptionId drugId=drugId %}" method="POST">
-{% endif %}
+<form action="{% url 'dosage' id=id %}" method="POST">
 
     {% csrf_token %}
 
@@ -54,40 +50,40 @@
 
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="period-days" name="period" type="radio" value="1"
-                        aria-controls="conditional-period-days" aria-expanded="false">
+                        aria-controls="conditional-period-days" aria-expanded="{% if period == 1 %}true{% else %}false{% endif %}" {% if period == 1 %}checked="checked"{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="period-days">
                         Days
                     </label>
                 </div>
 
-                <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-period-days">
+                <div class="nhsuk-radios__conditional {% if period != 1 %}nhsuk-radios__conditional--hidden{% endif %}" id="conditional-period-days">
 
                     <div class="nhsuk-form-group">
                         <label class="nhsuk-label" for="dosage-days">
                             How much of this item do you take per day?
                         </label>
                         <input class="nhsuk-input nhsuk-u-width-two-thirds" id="dosage-days" name="dosage-days"
-                            type="number">
+                            type="number" value="{% if period == 1 %}{{ dosage }}{% else %}{% endif %}">
                     </div>
 
                 </div>
 
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="period-weeks" name="period" type="radio" value="7"
-                        aria-controls="conditional-period-weeks" aria-expanded="false">
+                        aria-controls="conditional-period-weeks" aria-expanded="{% if period == 7 %}true{% else %}false{% endif %}" {% if period == 7 %}checked="checked"{% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="period-weeks">
                         Weeks
                     </label>
                 </div>
 
-                <div class="nhsuk-radios__conditional nhsuk-radios__conditional--hidden" id="conditional-period-weeks">
+                <div class="nhsuk-radios__conditional {% if period != 7 %}nhsuk-radios__conditional--hidden{% endif %}" id="conditional-period-weeks">
 
                     <div class="nhsuk-form-group">
                         <label class="nhsuk-label" for="dosage-weeks">
                             How much of this item do you take per week?
                         </label>
                         <input class="nhsuk-input nhsuk-u-width-two-thirds" id="dosage-weeks" name="dosage-weeks"
-                            type="number">
+                            type="number" value="{% if period == 7 %}{{ dosage }}{% else %}{% endif %}">
                     </div>
 
                 </div>

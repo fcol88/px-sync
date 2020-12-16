@@ -5,6 +5,26 @@
 
 {% block content %}
 
+{% if messages %}
+<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="nhsuk-error-summary__body">
+        <p>There is a problem with your prescription.
+        </p>
+        <ul class="nhsuk-list nhsuk-error-summary__list">
+            {% for message in messages %}
+            <li>
+                <a href="{{ message.extra_tags }}">
+                    {{ message }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
 <p class="nhsuk-body">Some text explaining this page</p>
 
 {% if prescription.quantity_set.all %}
@@ -33,16 +53,16 @@
                 <span class="nhsuk-table-responsive__heading">Drug name </span> {{ quantity.drug.name }}
             </td>
             <td role="cell" class="nhsuk-table__cell">
-                <span class="nhsuk-table-responsive__heading">Prescribed amount </span>
-                {{ quantity.prescribed }}
+                <span class="nhsuk-table-responsive__heading">Dosage </span>
+                {% if quantity.dosage != -1 %}{{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}{% endif %}
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">In stock </span>
-                {{ quantity.inStock }}
+                {% if quantity.inStock != -1 %}{{ quantity.inStock }}{% endif %}
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
-                <a href="{% url 'edititemname' prescriptionId=prescription.id id=quantity.id %}">Edit</a>
+                <a id="editLink{{ quantity.id }}" href="{% url 'edititemname' prescriptionId=prescription.id id=quantity.id %}">Edit</a>
             </td>
         </tr>
         {% endfor %}
@@ -50,7 +70,7 @@
 </table>
 {% endif %}
 
-<a class="nhsuk-button nhsuk-button--secondary" href="{% url 'itemname' prescriptionId=prescription.id %}">Add item</a>
+<a id="addItem" class="nhsuk-button nhsuk-button--secondary {% if prescription.quantity_set.all %}nhsuk-u-margin-top-5{% endif %}" href="{% url 'itemname' prescriptionId=prescription.id %}">Add item</a>
 
 <p class="nhsuk-body">
     A little something explaining that you can't continue until you've added at least one item.

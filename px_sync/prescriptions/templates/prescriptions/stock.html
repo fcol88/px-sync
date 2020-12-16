@@ -41,7 +41,7 @@
         </span>
         {% endif %}
         <input class="nhsuk-input nhsuk-input--width-3" id="stock" name="stock" type="number"
-            aria-describedby="stock-hint {% if messages %}stock-error{% endif %}">
+            aria-describedby="stock-hint {% if messages %}stock-error{% endif %}" value="{{ stock }}">
     </div>
 
     <button class="nhsuk-button" type="submit">Save</button>

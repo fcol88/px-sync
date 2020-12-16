@@ -32,10 +32,11 @@
 {% endif %}
 
     {% csrf_token %}
+
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
         <div class="nhsuk-hint" id="frequency-hint">
-            Enter the frequency, in days, of your prescription. For example, if you're issued one every 4 weeks, enter
-            28.
+            Enter the frequency, in days, of your prescription. For example, if you're issued one every 4 weeks,
+            enter 28.
         </div>
         {% if messages %}
         <span class="nhsuk-error-message" id="reference-error">

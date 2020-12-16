@@ -58,7 +58,9 @@
     you can enter it below.</p>
 
 <form action="{% url 'resume' %}" method="POST">
+
     {% csrf_token %}
+    
     <div class="nhsuk-form-group {% if status != 'ok' %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label" for="reference">What is your reference number?</label>
         <div class="nhsuk-hint" id="reference-hint">Your reference number is made up of 6 characters which may be
@@ -73,7 +75,8 @@
         </span>
         {% endif %}
         <input class="nhsuk-input nhsuk-input--width-10 {% if status != 'ok' %}nhsuk-input--error{% endif %}"
-            id="reference" name="reference" type="text" aria-describedby="reference-hint {% if status != 'ok' %}reference-error{% endif %}">
+            id="reference" name="reference" type="text"
+            aria-describedby="reference-hint {% if status != 'ok' %}reference-error{% endif %}">
     </div>
 
     <button class="nhsuk-button nhsuk-button--secondary" type="submit">Continue</button>

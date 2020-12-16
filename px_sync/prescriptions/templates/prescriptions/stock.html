@@ -26,7 +26,9 @@
 {% endif %}
 
 <form action="{% url 'stock' id=id %}" method="POST">
+
     {% csrf_token %}
+
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label" for="stock">How much of this do you have at home?</label>
         <div class="nhsuk-hint" id="stock-hint">

@@ -32,6 +32,7 @@
 {% endif %}
 
     {% csrf_token %}
+    
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label" for="drugname">What is the name of the drug?</label>
         <div class="nhsuk-hint" id="drugname-hint">

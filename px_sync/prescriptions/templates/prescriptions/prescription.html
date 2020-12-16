@@ -25,7 +25,9 @@
 </div>
 {% endif %}
 
-<p class="nhsuk-body">Some text explaining this page</p>
+<p class="nhsuk-body">This page lists all of the items you have added to this prescription. You must add at least one
+    item to your prescription in order to continue. If you need to change some of the details of an item, such as the
+    quantity you have in stock, or if your dosage has changed, you can use the edit links to make these changes.</p>
 
 {% if prescription.quantity_set.all %}
 <table role="table" class="nhsuk-table-responsive">
@@ -54,7 +56,9 @@
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Dosage </span>
-                {% if quantity.dosage != -1 %}{{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}{% endif %}
+                {% if quantity.dosage != -1 %}
+                    {{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}
+                {% endif %}
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">In stock </span>
@@ -62,7 +66,8 @@
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
-                <a id="editLink{{ quantity.id }}" href="{% url 'edititemname' prescriptionId=prescription.id id=quantity.id %}">Edit</a>
+                <a id="editLink{{ quantity.id }}"
+                    href="{% url 'edititemname' prescriptionId=prescription.id id=quantity.id %}">Edit</a>
             </td>
         </tr>
         {% endfor %}
@@ -70,12 +75,12 @@
 </table>
 {% endif %}
 
-<a id="addItem" class="nhsuk-button nhsuk-button--secondary {% if prescription.quantity_set.all %}nhsuk-u-margin-top-5{% endif %}" href="{% url 'itemname' prescriptionId=prescription.id %}">Add item</a>
+<a id="addItem"
+    class="nhsuk-button nhsuk-button--secondary {% if prescription.quantity_set.all %}nhsuk-u-margin-top-5{% endif %}"
+    href="{% url 'itemname' prescriptionId=prescription.id %}">Add item</a>
 
-<p class="nhsuk-body">
-    A little something explaining that you can't continue until you've added at least one item.
-</p>
-
+{% if prescription.quantity_set.all %}
 <a class="nhsuk-button" href="{% url 'checkitems' id=prescription.id %}">Continue</a>
+{% endif %}
 
 {% endblock %}

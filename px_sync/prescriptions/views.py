@@ -3,7 +3,7 @@ from django.contrib import messages
 from .reference_service import get_reference, reference_exists
 from .models import SyncRequest, Prescription, Quantity, Drug
 from datetime import datetime
-from math import ceil, floor
+from math import ceil
 
 def landing(request, status = "ok"):
 

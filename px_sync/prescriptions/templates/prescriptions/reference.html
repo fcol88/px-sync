@@ -17,13 +17,16 @@
             Make a note of your reference
         </span>
     </h3>
-    <p>You'll need this reference to give to your GP. You'll also need it for retrieving the information you've provided
+    <p>If you were asked to use this service by your prescriber, you'll need this reference to give to your prescriber.
+        You'll also need it for retrieving the information you've provided
         if you return to this service.</p>
 </div>
 
 <form action="{% url 'resume' %}" method="POST">
+
     {% csrf_token %}
-    <input type="hidden" name="reference" value="{{ reference }}"/>
+    
+    <input type="hidden" name="reference" value="{{ reference }}" />
     <button class="nhsuk-button" type="submit">Continue</button>
 
 </form>

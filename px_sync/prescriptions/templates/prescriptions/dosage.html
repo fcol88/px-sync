@@ -31,7 +31,9 @@
 
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
 
-        <fieldset class="nhsuk-fieldset" aria-describedby="period-hint {% for message in messages %}dosage-error{{ loop.index }}{% endfor %}" id="period">
+        <fieldset class="nhsuk-fieldset"
+            aria-describedby="period-hint {% for message in messages %}dosage-error{{ loop.index }}{% endfor %}"
+            id="period">
             <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
                 What is your dosage measured in?
             </legend>
@@ -50,13 +52,16 @@
 
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="period-days" name="period" type="radio" value="1"
-                        aria-controls="conditional-period-days" aria-expanded="{% if period == 1 %}true{% else %}false{% endif %}" {% if period == 1 %}checked="checked"{% endif %}>
+                        aria-controls="conditional-period-days"
+                        aria-expanded="{% if period == 1 %}true{% else %}false{% endif %}" {% if period==1
+                        %}checked="checked" {% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="period-days">
                         Days
                     </label>
                 </div>
 
-                <div class="nhsuk-radios__conditional {% if period != 1 %}nhsuk-radios__conditional--hidden{% endif %}" id="conditional-period-days">
+                <div class="nhsuk-radios__conditional {% if period != 1 %}nhsuk-radios__conditional--hidden{% endif %}"
+                    id="conditional-period-days">
 
                     <div class="nhsuk-form-group">
                         <label class="nhsuk-label" for="dosage-days">
@@ -70,13 +75,16 @@
 
                 <div class="nhsuk-radios__item">
                     <input class="nhsuk-radios__input" id="period-weeks" name="period" type="radio" value="7"
-                        aria-controls="conditional-period-weeks" aria-expanded="{% if period == 7 %}true{% else %}false{% endif %}" {% if period == 7 %}checked="checked"{% endif %}>
+                        aria-controls="conditional-period-weeks"
+                        aria-expanded="{% if period == 7 %}true{% else %}false{% endif %}" {% if period==7
+                        %}checked="checked" {% endif %}>
                     <label class="nhsuk-label nhsuk-radios__label" for="period-weeks">
                         Weeks
                     </label>
                 </div>
 
-                <div class="nhsuk-radios__conditional {% if period != 7 %}nhsuk-radios__conditional--hidden{% endif %}" id="conditional-period-weeks">
+                <div class="nhsuk-radios__conditional {% if period != 7 %}nhsuk-radios__conditional--hidden{% endif %}"
+                    id="conditional-period-weeks">
 
                     <div class="nhsuk-form-group">
                         <label class="nhsuk-label" for="dosage-weeks">

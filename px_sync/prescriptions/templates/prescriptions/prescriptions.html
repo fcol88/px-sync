@@ -25,7 +25,9 @@
 </div>
 {% endif %}
 
-<p class="nhsuk-body">Some text explaining this page</p>
+<p class="nhsuk-body">This page lists all of the prescriptions you want to synchronise. You must add at least two
+    prescriptions to synchronise. If you want to adjust the frequency of your prescription, you can use the change links
+    next to the frequency. If you want to view or edit the items on each prescription, use the view links.</p>
 
 {% if syncRequest.prescription_set.all %}
 <table role="table" class="nhsuk-table-responsive">
@@ -53,9 +55,9 @@
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Items </span>
                 <ul class="nhsuk-list">
-                {% for quantity in prescription.quantity_set.all %}
+                    {% for quantity in prescription.quantity_set.all %}
                     <li>{{ quantity.drug.name }}</li>
-                {% endfor %}
+                    {% endfor %}
                 </ul>
             </td>
             <td role="cell" class="nhsuk-table__cell">
@@ -68,12 +70,13 @@
 </table>
 {% endif %}
 
-<a id="addPrescription" class="nhsuk-button nhsuk-button--secondary {% if syncRequest.prescription_set.all %}nhsuk-u-margin-top-5{% endif %}" href="{% url 'frequency' %}">Add prescription</a>
+<a id="addPrescription"
+    class="nhsuk-button nhsuk-button--secondary {% if syncRequest.prescription_set.all %}nhsuk-u-margin-top-5{% endif %}"
+    href="{% url 'frequency' %}">Add prescription</a>
 
-<p class="nhsuk-body">
-    A little something explaining that you can't continue until you've added at least two prescriptions.
-</p>
 
+{% if syncRequest.prescription_set.all|length > 1 %}
 <a class="nhsuk-button" href="{% url 'calculate' %}">Submit</a>
+{% endif %}
 
 {% endblock %}

@@ -76,6 +76,10 @@
 
 
 {% if syncRequest.prescription_set.all|length > 1 %}
+
+<p class="nhsuk-body">If you've added all of your prescriptions, the button below 
+    will generate your prescription synchronisation request.</p>
+
 <a class="nhsuk-button" href="{% url 'calculate' %}">Submit</a>
 {% endif %}
 

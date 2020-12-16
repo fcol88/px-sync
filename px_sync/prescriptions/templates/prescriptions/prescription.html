@@ -80,6 +80,10 @@
     href="{% url 'itemname' prescriptionId=prescription.id %}">Add item</a>
 
 {% if prescription.quantity_set.all %}
+
+<p class="nhsuk-body">If you've added all of your items, the button 
+    below will return you to the prescription list.</p>
+
 <a class="nhsuk-button" href="{% url 'checkitems' id=prescription.id %}">Continue</a>
 {% endif %}
 

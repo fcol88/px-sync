@@ -25,7 +25,7 @@
 </div>
 {% endif %}
 
-<form action="{% url 'dosage' id=id %}" method="POST">
+<form action="{% url 'dosage' quantity_id=id %}" method="POST">
 
     {% csrf_token %}
 

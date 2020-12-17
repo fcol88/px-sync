@@ -50,7 +50,7 @@
         <tr role="row" class="nhsuk-table__row">
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Frequency in days </span>
-                {{ prescription.frequency }} (<a href="{% url 'editfrequency' id=prescription.id %}">Change</a>)
+                {{ prescription.frequency }} (<a href="{% url 'editfrequency' prescription_id=prescription.id %}">Change</a>)
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Items </span>
@@ -62,7 +62,7 @@
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
-                <a href="{% url 'prescription' id=prescription.id %}">View</a>
+                <a href="{% url 'prescription' prescription_id=prescription.id %}">View</a>
             </td>
         </tr>
         {% endfor %}

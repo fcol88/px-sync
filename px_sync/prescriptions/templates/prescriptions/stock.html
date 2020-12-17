@@ -25,7 +25,7 @@
 </div>
 {% endif %}
 
-<form action="{% url 'stock' id=id %}" method="POST">
+<form action="{% url 'stock' quantity_id=id %}" method="POST">
 
     {% csrf_token %}
 
@@ -33,7 +33,7 @@
         <label class="nhsuk-label" for="stock">How much of this do you have at home?</label>
         <div class="nhsuk-hint" id="stock-hint">
             Only include medicine which is in date. For example, if you have one full 28-pack of tablets and an open
-            pack with 7 tablets remaining, enter 35.
+            pack with 7 tablets remaining, enter 35. If you have an excess supply, this will be automatically capped.
         </div>
         {% if messages %}
         <span class="nhsuk-error-message" id="stock-error">

@@ -67,7 +67,7 @@
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
                 <a id="editLink{{ quantity.id }}"
-                    href="{% url 'edititemname' prescriptionId=prescription.id id=quantity.id %}">Edit</a>
+                    href="{% url 'edititemname' prescription_id=prescription.id quantity_id=quantity.id %}">Edit</a>
             </td>
         </tr>
         {% endfor %}
@@ -77,14 +77,14 @@
 
 <a id="addItem"
     class="nhsuk-button nhsuk-button--secondary {% if prescription.quantity_set.all %}nhsuk-u-margin-top-5{% endif %}"
-    href="{% url 'itemname' prescriptionId=prescription.id %}">Add item</a>
+    href="{% url 'itemname' prescription_id=prescription.id %}">Add item</a>
 
 {% if prescription.quantity_set.all %}
 
 <p class="nhsuk-body">If you've added all of your items, the button 
     below will return you to the prescription list.</p>
 
-<a class="nhsuk-button" href="{% url 'checkitems' id=prescription.id %}">Continue</a>
+<a class="nhsuk-button" href="{% url 'checkitems' prescription_id=prescription.id %}">Continue</a>
 {% endif %}
 
 {% endblock %}

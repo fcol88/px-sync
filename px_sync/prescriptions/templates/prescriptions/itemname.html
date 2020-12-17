@@ -26,9 +26,9 @@
 {% endif %}
 
 {% if id %}
-<form action="{% url 'edititemname' prescriptionId=prescriptionId id=id %}" method="POST">
+<form action="{% url 'edititemname' prescription_id=prescriptionId quantity_id=id %}" method="POST">
 {% else %}
-<form action="{% url 'itemname' prescriptionId=prescriptionId %}" method="POST">
+<form action="{% url 'itemname' prescription_id=prescriptionId %}" method="POST">
 {% endif %}
 
     {% csrf_token %}

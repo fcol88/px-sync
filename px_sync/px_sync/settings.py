@@ -26,7 +26,7 @@ SECRET_KEY = 'k-dh6k*_#p=v($khb7sgno$v%1k*4uw-!q2$je^2_dk8dc7(wz'
 # When running locally with debug switched off to test error pages,
 # remember to use the following command for CSS to work:
 # python manage.py runserver --insecure
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost']
 

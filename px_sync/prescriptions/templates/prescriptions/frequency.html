@@ -45,8 +45,8 @@
             {% endfor %}
         </span>
         {% endif %}
-        <input class="nhsuk-input nhsuk-input--width-3" id="frequency" name="frequency" type="number"
-            aria-describedby="frequency-hint {% if messages %}reference-error{% endif %}" value="{{ frequency }}">
+        <input class="nhsuk-input nhsuk-input--width-3" id="frequency" name="frequency" type="number" autocomplete="off"
+            aria-describedby="frequency-hint{% if messages %} reference-error{% endif %}" value="{{ frequency }}">
     </div>
 
     <button class="nhsuk-button" type="submit">Save</button>

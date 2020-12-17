@@ -32,7 +32,7 @@
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
 
         <fieldset class="nhsuk-fieldset"
-            aria-describedby="period-hint {% for message in messages %}dosage-error{{ loop.index }}{% endfor %}"
+            aria-describedby="period-hint{% for message in messages %} dosage-error{{ loop.index }}{% endfor %}"
             id="period">
             <legend class="nhsuk-fieldset__legend nhsuk-fieldset__legend--l">
                 What is your dosage measured in?
@@ -54,7 +54,7 @@
                     <input class="nhsuk-radios__input" id="period-days" name="period" type="radio" value="1"
                         aria-controls="conditional-period-days"
                         aria-expanded="{% if period == 1 %}true{% else %}false{% endif %}" {% if period == 1 %}
-                        checked="checked" {% endif %}>
+                        checked="checked" {% endif %} autocomplete="off">
                     <label class="nhsuk-label nhsuk-radios__label" for="period-days">
                         Days
                     </label>
@@ -68,7 +68,8 @@
                             How much of this item do you take per day?
                         </label>
                         <input class="nhsuk-input nhsuk-u-width-two-thirds" id="dosage-days" name="dosage-days"
-                            type="number" value="{% if period == 1 %}{{ dosage }}{% else %}{% endif %}">
+                            type="number" value="{% if period == 1 %}{{ dosage }}{% else %}{% endif %}"
+                            autocomplete="off">
                     </div>
 
                 </div>
@@ -77,7 +78,7 @@
                     <input class="nhsuk-radios__input" id="period-weeks" name="period" type="radio" value="7"
                         aria-controls="conditional-period-weeks"
                         aria-expanded="{% if period == 7 %}true{% else %}false{% endif %}" {% if period == 7 %}
-                        checked="checked" {% endif %}>
+                        checked="checked" {% endif %} autocomplete="off">
                     <label class="nhsuk-label nhsuk-radios__label" for="period-weeks">
                         Weeks
                     </label>
@@ -91,7 +92,8 @@
                             How much of this item do you take per week?
                         </label>
                         <input class="nhsuk-input nhsuk-u-width-two-thirds" id="dosage-weeks" name="dosage-weeks"
-                            type="number" value="{% if period == 7 %}{{ dosage }}{% else %}{% endif %}">
+                            type="number" value="{% if period == 7 %}{{ dosage }}{% else %}{% endif %}"
+                            autocomplete="off">
                     </div>
 
                 </div>

@@ -67,7 +67,8 @@
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
                 <a id="editLink{{ quantity.id }}"
-                    href="{% url 'edititemname' prescription_id=prescription.id quantity_id=quantity.id %}">Edit</a>
+                    href="{% url 'edititemname' prescription_id=prescription.id quantity_id=quantity.id %}">Edit
+                <span class="nhsuk-u-visually-hidden"> {{ quantity.drug.name }}</span></a>
             </td>
         </tr>
         {% endfor %}
@@ -84,7 +85,8 @@
 <p class="nhsuk-body">If you've added all of your items, the button 
     below will return you to the prescription list.</p>
 
-<a class="nhsuk-button" href="{% url 'checkitems' prescription_id=prescription.id %}">Continue</a>
+<a class="nhsuk-button" href="{% url 'checkitems' prescription_id=prescription.id %}">Continue
+    <span class="nhsuk-u-visually-hidden"> to main synchronisation request page</span></a>
 {% endif %}
 
 {% endblock %}

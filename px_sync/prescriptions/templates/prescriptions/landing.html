@@ -75,8 +75,8 @@
         </span>
         {% endif %}
         <input class="nhsuk-input nhsuk-input--width-10 {% if status != 'ok' %}nhsuk-input--error{% endif %}"
-            id="reference" name="reference" type="text"
-            aria-describedby="reference-hint {% if status != 'ok' %}reference-error{% endif %}">
+            id="reference" name="reference" type="text" autocomplete="off"
+            aria-describedby="reference-hint{% if status != 'ok' %} reference-error{% endif %}">
     </div>
 
     <button class="nhsuk-button nhsuk-button--secondary" type="submit">Continue</button>

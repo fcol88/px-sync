@@ -12,7 +12,6 @@ from .models import SyncRequest, Prescription, Quantity, Drug
 from .calculator import calculate_stock_value, calculate_required_items
 
 def landing(request, status = "ok"):
-
     """
     renders landing page - accepts status variable which has three values:
     ok - no issues with page, no error messages shown
@@ -25,7 +24,6 @@ def landing(request, status = "ok"):
     })
 
 def resume(request):
-
     """
     used for both starting a new journey and resuming a journey
     loads syncid into session memory or redirects if not found
@@ -43,10 +41,10 @@ def resume(request):
 
         return redirect('prescriptions')
 
+    # there is no django handler for this response but it is the correct code
     return HttpResponseNotAllowed(['POST'])
 
 def create_sync_request(request):
-
     """
     creates and saves new sync request
     shows user the reference of the request should they need to return
@@ -61,7 +59,6 @@ def create_sync_request(request):
     })
 
 def list_prescriptions(request):
-
     """
     shows the list of prescriptions for a given sync request
     redirects if timed out
@@ -80,10 +77,10 @@ def list_prescriptions(request):
     })
 
 def frequency_form(request, prescription_id=None):
-
     """
     Captures the frequency of a prescription
     BOTH: if it's an existing prescription, checks to see if user is authorised
+    otherwise makes a new prescription
     GET: if it's an existing prescription, populates with the old value,
     otherwise a blank string
     POST: validates that frequency is an acceptable value and rejects if not,
@@ -95,7 +92,6 @@ def frequency_form(request, prescription_id=None):
 
         return timeout_redirect()
 
-    sync_request = SyncRequest.objects.get(id=sync_id)
     prescription = None
     if prescription_id is None:
         prescription = Prescription()
@@ -114,6 +110,7 @@ def frequency_form(request, prescription_id=None):
                 'frequency' : frequency
             })
 
+        sync_request = SyncRequest.objects.get(id=sync_id)
         prescription.syncRequest = sync_request
         prescription.frequency = frequency
         prescription.save()
@@ -134,7 +131,6 @@ def frequency_form(request, prescription_id=None):
     })
 
 def view_prescription(request, prescription_id):
-
     """
     Shows the details of a given prescription
     Redirects if unauthorised or invalid
@@ -157,7 +153,6 @@ def view_prescription(request, prescription_id):
     })
 
 def item_name_form(request, prescription_id, quantity_id=None):
-
     """
     Captures drug name of prescription item
     BOTH: if it's an existing item, checks to see if user is authorised
@@ -214,7 +209,6 @@ def item_name_form(request, prescription_id, quantity_id=None):
     })
 
 def dosage_form(request, quantity_id):
-
     """
     Captures dosage and period information
     BOTH: is an existing item at this point - checks if the user is authorised
@@ -268,7 +262,6 @@ def dosage_form(request, quantity_id):
     })
 
 def stock_form(request, quantity_id):
-
     """
     Captures stock information about prescription item
     BOTH: is an existing item at this point - checks if user is authorised
@@ -309,7 +302,6 @@ def stock_form(request, quantity_id):
     })
 
 def check_items(request, prescription_id):
-
     """
     Validates that all prescription items are complete before
     redirecting to the prescription list view
@@ -335,7 +327,6 @@ def check_items(request, prescription_id):
     return redirect('prescriptions')
 
 def calculate(request):
-
     """
     Calculates the required amounts for the prescription synchronisation
     request, then redirects to a page showing the required amounts
@@ -359,13 +350,11 @@ def calculate(request):
     return redirect('syncrequest')
 
 def view_sync_request(request):
-
     """
     Shows the completed sync request
     """
 
     sync_id = get_sync_id(request)
-
     if sync_id is None:
 
         return timeout_redirect()
@@ -377,7 +366,6 @@ def view_sync_request(request):
     })
 
 def timeout_redirect():
-
     """
     redirects to the landing page with a status of timeout
     """
@@ -385,7 +373,6 @@ def timeout_redirect():
     return redirect('startwithstatus', status='timeout')
 
 def not_found_redirect():
-
     """
     redirects to the landing page with a status of notfound
     """
@@ -393,7 +380,6 @@ def not_found_redirect():
     return redirect('startwithstatus', status='notfound')
 
 def get_sync_id(request):
-
     """
     gets the current sync id, or returns None if not present
     """
@@ -401,7 +387,6 @@ def get_sync_id(request):
     return request.session.get('syncid', None)
 
 def get_prescription(prescription_id, sync_id):
-
     """
     tries to get a prescription from the database
     if it can't find it, returns none and not_found=True,
@@ -421,7 +406,6 @@ def get_prescription(prescription_id, sync_id):
     return prescription, not_found
 
 def get_quantity(quantity_id, sync_id):
-
     """
     tries to get a quantity from the database
     if it can't find it, returns none and not_found=True,

@@ -7,6 +7,7 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+
     path('start', views.landing, name="start"),
 
     path('start/<str:status>', views.landing, name="startwithstatus"),

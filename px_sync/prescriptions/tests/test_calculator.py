@@ -56,7 +56,7 @@ class CalculatorTests(TestCase):
         self.assertEqual(result, 2)
 
     def test_calculator_calculates_required_quantities(self):
-        """when given a list of prescriptions, 
+        """when given a list of prescriptions,
         the required amount will be calculated and saved"""
         sync_request = SyncRequest.objects.get(id=1)
         calculator.calculate_required_items(sync_request)
@@ -68,7 +68,7 @@ class CalculatorTests(TestCase):
         self.assertEqual(quantity_two.required, 0)
 
     def test_calculator_zeros_required_amount_when_max_drug_changes(self):
-        """when given a list of prescriptions, 
+        """when given a list of prescriptions,
         the required amount will be calculated and saved"""
 
         sync_request = SyncRequest.objects.get(id=1)

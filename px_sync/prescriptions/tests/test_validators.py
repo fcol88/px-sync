@@ -5,7 +5,6 @@ Validator tests
 from django.test import TestCase, Client
 from django.contrib.messages import get_messages
 from django.urls import reverse
-from prescriptions import validators
 from ..models import SyncRequest, Prescription, Quantity, Drug
 
 class ValidatorTests(TestCase):
@@ -265,7 +264,7 @@ class ValidatorTests(TestCase):
         which both have only valid items, messages is not populated"""
         response = self.client.get(reverse('calculate'))
         messages = list(get_messages(response.wsgi_request))
-        
+
         self.assertEqual(len(messages), 0)
 
     def test_when_sync_request_has_less_than_two_items_result_rejected(self):
@@ -275,7 +274,7 @@ class ValidatorTests(TestCase):
         prescription.delete()
         response = self.client.get(reverse('calculate'))
         messages = list(get_messages(response.wsgi_request))
-        
+
         self.assertEqual(len(messages), 1)
         self.assertEqual(str(messages[0]),
         'Add at least two prescriptions to synchronise')

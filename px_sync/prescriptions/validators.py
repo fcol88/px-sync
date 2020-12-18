@@ -10,7 +10,7 @@ def validate_frequency(request):
     Validates prescription frequency.
     Accepted parameters are:
     -Must be a number
-    -Must be less than 365 (may change based on user feedback)
+    -Must be less than 90 (based on user feedback)
     -Must be greater than 0
     """
 
@@ -20,9 +20,9 @@ def validate_frequency(request):
     else:
         try:
             frequency = int(frequency)
-            if frequency > 365:
+            if frequency > 90:
                 messages.add_message(request, messages.WARNING,
-                "Enter a lower frequency")
+                "The validator can't be used for prescriptions longer than 90 days")
             elif frequency < 1:
                 messages.add_message(request, messages.WARNING,
                 "Enter a number greater than 0")
@@ -69,7 +69,7 @@ def validate_dosage(request, period):
     Accepts period as a parameter to decide which form field to get
     Accepted parameters are:
     -Must be a number
-    -Must be less than 1001 (may change based on user feedback)
+    -Must be less than 20 * period (based on user feedback)
     -Must be greater than zero
     """
 
@@ -83,7 +83,7 @@ def validate_dosage(request, period):
     else:
         try:
             dosage = int(dosage)
-            if dosage > 1000:
+            if dosage > (20 * period):
                 messages.add_message(request, messages.WARNING,
                 "Enter a lower dosage")
             elif dosage < 1:
@@ -99,7 +99,7 @@ def validate_stock(request):
     Validates stock levels.
     Accepted parameters are:
     -Must be a number
-    -Must be less than 1000 (may change based on user feedback)
+    -Must be less than 1000 (based on user feedback)
     -Must be greater than or equal to 0
     """
 

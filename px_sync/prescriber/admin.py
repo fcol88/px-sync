@@ -1,5 +1,5 @@
 """
-Admin config - not needed
+Admin model config - not needed
 """
 
 from django.contrib import admin

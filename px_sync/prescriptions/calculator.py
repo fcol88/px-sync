@@ -16,8 +16,8 @@ def calculate_stock_value(quantity, stock):
     rounded_maximum = ceil(maximum)
 
     if stock > rounded_maximum:
-        return rounded_maximum
-    return stock
+        return rounded_maximum, stock
+    return stock, stock
 
 def calculate_required_items(sync_request):
     """

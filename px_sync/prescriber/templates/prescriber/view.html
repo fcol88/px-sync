@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Prescription synchronisation request{% endblock %}
+{% block pagetitle %}Prescription synchronisation request ({{ syncRequest.reference }}){% endblock %}
+
+
+{% block content %}
+
+<h2 class="nhsuk-header-l">Calculated items for prescription request</h2>
+
+<table class="nhsuk-table">
+    <caption class="nhsuk-table__caption nhsuk-u-visually-hidden">Prescription synchronisation request</caption>
+    <thead role="rowgroup" class="nhsuk-table__head">
+        <tr role="row">
+            <th role="columnheader" class="" scope="col">
+                Item name
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Quantity required
+            </th>
+        </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+        {% for prescription in syncRequest.prescription_set.all %}
+        {% for quantity in prescription.quantity_set.all %}
+        {% if quantity.required != 0 %}
+        <tr role="row" class="nhsuk-table__row">
+            <td class="nhsuk-table__cell">{{ quantity.drug.name }}</td>
+            <td class="nhsuk-table__cell ">{{ quantity.required }}</td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2 class="nhsuk-header-l">Patient-entered prescription data</h2>
+
+{% for prescription in syncRequest.prescription_set.all %}
+<table role="table" class="nhsuk-table-responsive nhsuk-u-margin-bottom-8">
+    <caption class="nhsuk-table__caption">Prescription {{ forloop.counter }}</caption>
+    <thead role="rowgroup" class="nhsuk-table__head">
+        <tr role="row">
+            <th role="columnheader" class="" scope="col">
+                Drug name
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Dosage
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Capped stock
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Actual stock
+            </th>
+        </tr>
+    </thead>
+    <tbody class="nhsuk-table__body">
+        {% for quantity in prescription.quantity_set.all %}
+        <tr role="row" class="nhsuk-table__row">
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Drug name </span> {{ quantity.drug.name }}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Dosage </span>
+                {% if quantity.dosage != -1 %}
+                    {{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}
+                {% endif %}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Capped stock </span>
+                {% if quantity.inStock != -1 %}{{ quantity.inStock }}{% endif %}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Actual stock</span> </span>
+                {% if quantity.rawStock != 0 %}{{ quantity.rawStock }}{% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endfor %}
+
+{% endblock %}

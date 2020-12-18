@@ -18,7 +18,8 @@ from django.urls import include, path
 
 urlpatterns = [
     path('prescriptions/', include('prescriptions.urls')),
-    path('admin/', admin.site.urls),
+    path('prescriber/', include('prescriber.urls')),
+    path('manage/', admin.site.urls),
 ]
 
 handler404 = 'core.views.page_not_found'

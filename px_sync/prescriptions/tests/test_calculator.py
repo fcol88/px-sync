@@ -42,18 +42,22 @@ class CalculatorTests(TestCase):
         quantity_two.save()
 
     def test_calculator_returns_stock_when_below_maximum(self):
-        """When the stock is below maximum, return the stock value"""
+        """When the stock is below maximum, return the stock value
+        and the same rawStock value
+        """
         quantity = Quantity.objects.get(id=1)
-        result = calculator.calculate_stock_value(quantity, quantity.inStock)
+        stock, raw_stock = calculator.calculate_stock_value(quantity, quantity.inStock)
 
-        self.assertEqual(result, 12)
+        self.assertEqual(stock, 12)
+        self.assertEqual(raw_stock, 12)
 
     def test_calculator_returns_maximum_when_above_maximum(self):
         """When the stock is above maximum, return the maximum"""
         quantity = Quantity.objects.get(id=2)
-        result = calculator.calculate_stock_value(quantity, quantity.inStock)
+        stock, raw_stock = calculator.calculate_stock_value(quantity, quantity.inStock)
 
-        self.assertEqual(result, 2)
+        self.assertEqual(stock, 2)
+        self.assertEqual(raw_stock, 3)
 
     def test_calculator_calculates_required_quantities(self):
         """when given a list of prescriptions,

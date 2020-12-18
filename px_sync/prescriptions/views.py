@@ -289,7 +289,7 @@ def stock_form(request, quantity_id):
                 'stock' : stock
             })
 
-        quantity.inStock = calculate_stock_value(quantity, stock)
+        quantity.inStock, quantity.rawStock = calculate_stock_value(quantity, stock)
         quantity.save()
 
         return redirect('prescription', prescription_id=quantity.prescription.id)

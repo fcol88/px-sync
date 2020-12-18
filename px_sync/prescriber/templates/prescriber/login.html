@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Prescription Synchronisation Requests{% endblock %}
+{% block pagetitle %}Prescription Synchronisation Requests{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+    <h2 class="nhsuk-error-summary__title" id="error-summary-title">
+        There is a problem
+    </h2>
+    <div class="nhsuk-error-summary__body">
+        <p>There is a problem with the login information you entered.
+        </p>
+        <ul class="nhsuk-list nhsuk-error-summary__list">
+            {% for message in messages %}
+            <li>
+                <a href="#username">
+                    {{ message }}</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+<form action="{% url 'login' %}" method="POST">
+
+    {% csrf_token %}
+
+    <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label" for="username">Username</label>
+        <input class="nhsuk-input nhsuk-input--width-20" id="username" name="username" type="text" autocomplete="off"/>
+    </div>
+
+    <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
+        <label class="nhsuk-label" for="password">Password</label>
+        <input class="nhsuk-input nhsuk-input--width-20" id="password" name="password" type="password"/>
+    </div>
+
+    <button class="nhsuk-button" type="submit">Login</button>
+
+</form>
+
+{% endblock %}

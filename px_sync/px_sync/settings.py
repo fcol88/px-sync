@@ -27,7 +27,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # When running locally with debug switched off to test error pages,
 # remember to use the following command for CSS to work:
 # python manage.py runserver --insecure
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1','localhost']
 
@@ -37,6 +37,7 @@ ALLOWED_HOSTS = ['127.0.0.1','localhost']
 INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'prescriptions.apps.PrescriptionsConfig',
+    'prescriber.apps.PrescriberConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

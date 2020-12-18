@@ -23,7 +23,8 @@ class Quantity(models.Model):
     Quantity.dosage = the amount taken per period
     Quantity.period = the frequency the dosage is taken
     Quantity.perDay = computed from dosage and period
-    Quantity.inStock = the amount the patient has
+    Quantity.inStock = the amount the patient has (capped at maximum if required)
+    Quantity.rawStock = the amount the patient has (uncapped)
     Quantity.required = the computed amount required
     """
     prescription = models.ForeignKey('Prescription', on_delete=models.CASCADE)
@@ -31,6 +32,7 @@ class Quantity(models.Model):
     period = models.SmallIntegerField(default=-1)
     perDay = models.DecimalField(default=0, max_digits=5, decimal_places=2)
     inStock = models.SmallIntegerField(default=-1)
+    rawStock = models.SmallIntegerField(default=0)
     required = models.SmallIntegerField(default=0)
     drug = models.ForeignKey('Drug', on_delete=models.CASCADE)
 

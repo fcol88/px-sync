@@ -34,13 +34,16 @@
     </tbody>
 </table>
 
-<h2 class="nhsuk-header-l">Patient-entered prescription data</h2>
-
-{% for prescription in syncRequest.prescription_set.all %}
-<table role="table" class="nhsuk-table-responsive nhsuk-u-margin-bottom-8">
-    <caption class="nhsuk-table__caption">Prescription {{ forloop.counter }}</caption>
+<table role="table" class="nhsuk-table-responsive">
+    <caption class="nhsuk-table__caption">Patient-entered prescription data</caption>
     <thead role="rowgroup" class="nhsuk-table__head">
         <tr role="row">
+            <th role="columnheader" class="" scope="col">
+                Px
+            </th>
+            <th role="columnheader" class="" scope="col">
+                Frequency
+            </th>
             <th role="columnheader" class="" scope="col">
                 Drug name
             </th>
@@ -48,16 +51,20 @@
                 Dosage
             </th>
             <th role="columnheader" class="" scope="col">
-                Capped stock
-            </th>
-            <th role="columnheader" class="" scope="col">
-                Actual stock
+                Stock (Actual)
             </th>
         </tr>
     </thead>
     <tbody class="nhsuk-table__body">
+        {% for prescription in syncRequest.prescription_set.all %}
         {% for quantity in prescription.quantity_set.all %}
         <tr role="row" class="nhsuk-table__row">
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Px </span> {{ forloop.parentloop.counter }}
+            </td>
+            <td role="cell" class="nhsuk-table__cell">
+                <span class="nhsuk-table-responsive__heading">Frequency </span> {{ prescription.frequency }}
+            </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Drug name </span> {{ quantity.drug.name }}
             </td>
@@ -68,17 +75,13 @@
                 {% endif %}
             </td>
             <td role="cell" class="nhsuk-table__cell">
-                <span class="nhsuk-table-responsive__heading">Capped stock </span>
-                {% if quantity.inStock != -1 %}{{ quantity.inStock }}{% endif %}
-            </td>
-            <td role="cell" class="nhsuk-table__cell">
-                <span class="nhsuk-table-responsive__heading">Actual stock</span> </span>
-                {% if quantity.rawStock != 0 %}{{ quantity.rawStock }}{% endif %}
+                <span class="nhsuk-table-responsive__heading">Stock (Actual) </span>
+                {% if quantity.inStock != -1 %}{{ quantity.inStock }} ({{ quantity.rawStock }}){% endif %}
             </td>
         </tr>
         {% endfor %}
+        {% endfor %}
     </tbody>
 </table>
-{% endfor %}
 
 {% endblock %}

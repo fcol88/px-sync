@@ -7,6 +7,8 @@ consuming, run python manage.py test--exclude-tag=journey
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from django.test import TestCase, tag
+from .journey_test_utils import add_valid_drug_name, add_valid_period,\
+add_valid_stock, create_sync_request, add_valid_frequency, check_element_exists
 
 class AddEditItemJourney(TestCase):
     """Add/edit item test class"""
@@ -14,14 +16,8 @@ class AddEditItemJourney(TestCase):
     def setUp(self):
         """setup method"""
         self.driver = webdriver.Chrome()
-        self.driver.get("http://localhost:8000/prescriptions/reference")
-        cont = self.driver.find_element_by_id("continue")
-        cont.click()
-        self.driver.get("http://localhost:8000/prescriptions/frequency")
-        frequency = self.driver.find_element_by_id("frequency")
-        frequency.send_keys("28")
-        save = self.driver.find_element_by_id("save")
-        save.click()
+        create_sync_request(self.driver)
+        add_valid_frequency(self.driver)
 
     def tearDown(self):
         """teardown method"""
@@ -29,22 +25,9 @@ class AddEditItemJourney(TestCase):
 
     def make_valid_item(self):
         """creates valid item and saves"""
-        add_item = self.driver.find_element_by_id("addItem")
-        add_item.click()
-        drug_name = self.driver.find_element_by_id("drugname")
-        drug_name.send_keys("Test Item")
-        next_link = self.driver.find_element_by_id("next")
-        next_link.click()
-        period_days = self.driver.find_element_by_id("period-days")
-        period_days.click()
-        dosage_days = self.driver.find_element_by_id("dosage-days")
-        dosage_days.send_keys("4")
-        next_link = self.driver.find_element_by_id("next")
-        next_link.click()
-        stock = self.driver.find_element_by_id("stock")
-        stock.send_keys("4")
-        save_link = self.driver.find_element_by_id("save")
-        save_link.click()
+        add_valid_drug_name(self.driver)
+        add_valid_period(self.driver)
+        add_valid_stock(self.driver)
 
     @tag('journey','additem')
     def test_add_item_page_title_is_correct(self):
@@ -65,11 +48,7 @@ class AddEditItemJourney(TestCase):
         add_item.click()
         next_link = self.driver.find_element_by_id("next")
         next_link.click()
-        error_pane_exists = True
-        try:
-            self.driver.find_element_by_id("errorPane")
-        except NoSuchElementException:
-            error_pane_exists = False
+        error_pane_exists = check_element_exists(self.driver, "errorPane")
 
         self.assertIn("itemname", self.driver.current_url)
         self.assertTrue(error_pane_exists)
@@ -101,11 +80,7 @@ class AddEditItemJourney(TestCase):
         next_link.click()
         next_link = self.driver.find_element_by_id("next")
         next_link.click()
-        error_pane_exists = True
-        try:
-            self.driver.find_element_by_id("errorPane")
-        except NoSuchElementException:
-            error_pane_exists = False
+        error_pane_exists = check_element_exists(self.driver, "errorPane")
 
         self.assertIn("dosage", self.driver.current_url)
         self.assertTrue(error_pane_exists)
@@ -149,11 +124,7 @@ class AddEditItemJourney(TestCase):
         next_link.click()
         save_link = self.driver.find_element_by_id("save")
         save_link.click()
-        error_pane_exists = True
-        try:
-            self.driver.find_element_by_id("errorPane")
-        except NoSuchElementException:
-            error_pane_exists = False
+        error_pane_exists = check_element_exists(self.driver, "errorPane")
 
         self.assertIn("stock", self.driver.current_url)
         self.assertTrue(error_pane_exists)

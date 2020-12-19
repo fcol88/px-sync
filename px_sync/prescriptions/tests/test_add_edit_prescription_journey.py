@@ -5,8 +5,8 @@ consuming, run python manage.py test --exclude-tag=journey
 """
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 from django.test import TestCase, tag
+from .journey_test_utils import check_element_exists
 
 class AddEditPrescriptionJourney(TestCase):
     """Add/edit prescription test class"""
@@ -41,11 +41,8 @@ class AddEditPrescriptionJourney(TestCase):
         frequency.send_keys("0")
         save = self.driver.find_element_by_id("save")
         save.click()
-        error_pane_exists = True
-        try:
-            self.driver.find_element_by_id("errorPane")
-        except NoSuchElementException:
-            error_pane_exists = False
+        error_pane_exists = check_element_exists(self.driver, "errorPane")
+
         self.assertIn("How often do you receive your prescription?",
         self.driver.title)
         self.assertTrue(error_pane_exists)

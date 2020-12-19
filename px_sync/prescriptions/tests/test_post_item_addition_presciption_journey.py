@@ -6,8 +6,9 @@ consuming, run python manage.py test--exclude-tag=journey
 """
 
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException
 from django.test import TestCase, tag
+from .journey_test_utils import add_valid_drug_name, add_valid_period,\
+add_valid_stock, create_sync_request, add_valid_frequency, check_element_exists
 
 class PostItemAdditionPrescriptionJourney(TestCase):
     """Post-item addition prescription test class"""
@@ -15,9 +16,7 @@ class PostItemAdditionPrescriptionJourney(TestCase):
     def setUp(self):
         """setup method"""
         self.driver = webdriver.Chrome()
-        self.driver.get("http://localhost:8000/prescriptions/reference")
-        cont = self.driver.find_element_by_id("continue")
-        cont.click()
+        create_sync_request(self.driver)
 
     def tearDown(self):
         """teardown method"""
@@ -25,27 +24,10 @@ class PostItemAdditionPrescriptionJourney(TestCase):
 
     def make_valid_prescription(self):
         """make valid item and save"""
-        self.driver.get("http://localhost:8000/prescriptions/frequency")
-        frequency = self.driver.find_element_by_id("frequency")
-        frequency.send_keys("28")
-        save = self.driver.find_element_by_id("save")
-        save.click()
-        add_item = self.driver.find_element_by_id("addItem")
-        add_item.click()
-        drug_name = self.driver.find_element_by_id("drugname")
-        drug_name.send_keys("Test Item")
-        next_link = self.driver.find_element_by_id("next")
-        next_link.click()
-        period_days = self.driver.find_element_by_id("period-days")
-        period_days.click()
-        dosage_days = self.driver.find_element_by_id("dosage-days")
-        dosage_days.send_keys("4")
-        next_link = self.driver.find_element_by_id("next")
-        next_link.click()
-        stock = self.driver.find_element_by_id("stock")
-        stock.send_keys("4")
-        save_link = self.driver.find_element_by_id("save")
-        save_link.click()
+        add_valid_frequency(self.driver)
+        add_valid_drug_name(self.driver)
+        add_valid_period(self.driver)
+        add_valid_stock(self.driver)
 
     @tag('journey','postpx')
     def test_view_prescription_link_shows_prescription_details(self):
@@ -72,11 +54,7 @@ class PostItemAdditionPrescriptionJourney(TestCase):
 
         PostItemAdditionPrescriptionJourney.make_valid_prescription(self)
         self.driver.get("http://localhost:8000/prescriptions/prescriptions")
-        continue_link_exists = True
-        try:
-            self.driver.find_element_by_id("submit")
-        except NoSuchElementException:
-            continue_link_exists = False
+        continue_link_exists = check_element_exists(self.driver, "submit")
 
         self.assertFalse(continue_link_exists)
 
@@ -88,11 +66,7 @@ class PostItemAdditionPrescriptionJourney(TestCase):
         PostItemAdditionPrescriptionJourney.make_valid_prescription(self)
         PostItemAdditionPrescriptionJourney.make_valid_prescription(self)
         self.driver.get("http://localhost:8000/prescriptions/prescriptions")
-        continue_link_exists = True
-        try:
-            self.driver.find_element_by_id("submit")
-        except NoSuchElementException:
-            continue_link_exists = False
+        continue_link_exists = check_element_exists(self.driver, "submit")
 
         self.assertTrue(continue_link_exists)
 

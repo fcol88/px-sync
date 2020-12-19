@@ -115,8 +115,8 @@ def frequency_form(request, prescription_id=None):
         prescription.frequency = frequency
         prescription.save()
 
-        """if there are any existing quantities, redo the maximum calculation,
-        as the new frequency might affect the quantity cap"""
+        # if there are any existing quantities, redo the maximum calculation,
+        # as the new frequency might affect the quantity cap
         for quantity in prescription.quantity_set.all():
             quantity.inStock, quantity.rawStock =\
             calculate_stock_value(quantity, quantity.rawStock)

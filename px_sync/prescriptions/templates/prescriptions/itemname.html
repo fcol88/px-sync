@@ -6,7 +6,7 @@
 {% block content %}
 
 {% if messages %}
-<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+<div id="errorPane" class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
     <h2 class="nhsuk-error-summary__title" id="error-summary-title">
         There is a problem
     </h2>
@@ -49,7 +49,7 @@
             aria-describedby="drugname-hint{% if messages %} drugname-error{% endif %}" value="{{ drugName }}">
     </div>
 
-    <button class="nhsuk-button" type="submit">Next</button>
+    <button class="nhsuk-button" id="next" type="submit">Next</button>
 
 </form>
 

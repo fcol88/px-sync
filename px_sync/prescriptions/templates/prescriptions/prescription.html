@@ -51,16 +51,16 @@
     <tbody class="nhsuk-table__body">
         {% for quantity in prescription.quantity_set.all %}
         <tr role="row" class="nhsuk-table__row">
-            <td role="cell" class="nhsuk-table__cell">
+            <td role="cell" class="nhsuk-table__cell" id="drugname{{ forloop.counter }}">
                 <span class="nhsuk-table-responsive__heading">Drug name </span> {{ quantity.drug.name }}
             </td>
-            <td role="cell" class="nhsuk-table__cell">
+            <td role="cell" class="nhsuk-table__cell" id="dosage{{ forloop.counter }}">
                 <span class="nhsuk-table-responsive__heading">Dosage </span>
                 {% if quantity.dosage != -1 %}
                     {{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}
                 {% endif %}
             </td>
-            <td role="cell" class="nhsuk-table__cell">
+            <td role="cell" class="nhsuk-table__cell" id="instock{{ forloop.counter }}">
                 <span class="nhsuk-table-responsive__heading">In stock </span>
                 {% if quantity.inStock != -1 %}{{ quantity.inStock }}
                 {% if quantity.rawStock > quantity.inStock %}(Capped){% endif %}
@@ -68,7 +68,7 @@
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
-                <a id="editLink{{ quantity.id }}"
+                <a id="editLink{{ forloop.counter }}"
                     href="{% url 'edititemname' prescription_id=prescription.id quantity_id=quantity.id %}">Edit
                 <span class="nhsuk-u-visually-hidden"> {{ quantity.drug.name }}</span></a>
             </td>
@@ -87,7 +87,7 @@
 <p class="nhsuk-body">If you've added all of your items, the button 
     below will return you to the prescription list.</p>
 
-<a class="nhsuk-button" href="{% url 'checkitems' prescription_id=prescription.id %}">Continue
+<a class="nhsuk-button" id="checkitems" href="{% url 'checkitems' prescription_id=prescription.id %}">Continue
     <span class="nhsuk-u-visually-hidden"> to main synchronisation request page</span></a>
 {% endif %}
 

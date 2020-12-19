@@ -8,7 +8,7 @@
 
 <p class="nhsuk-body">Your unique reference for this service is:</p>
 
-<p class="nhsuk-u-font-size-48 nhsuk-u-font-weight-bold">{{ reference }}</p>
+<p class="nhsuk-u-font-size-48 nhsuk-u-font-weight-bold" id="reference">{{ reference }}</p>
 
 <div class="nhsuk-warning-callout">
     <h2 class="nhsuk-warning-callout__label">
@@ -27,7 +27,7 @@
     {% csrf_token %}
     
     <input type="hidden" name="reference" value="{{ reference }}" />
-    <button class="nhsuk-button" type="submit">Continue</button>
+    <button class="nhsuk-button" id="continue" type="submit">Continue</button>
 
 </form>
 

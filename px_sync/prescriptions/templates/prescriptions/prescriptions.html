@@ -48,9 +48,9 @@
     <tbody class="nhsuk-table__body">
         {% for prescription in syncRequest.prescription_set.all %}
         <tr role="row" class="nhsuk-table__row">
-            <td role="cell" class="nhsuk-table__cell">
+            <td role="cell" class="nhsuk-table__cell" id="frequency{{ forloop.counter }}">
                 <span class="nhsuk-table-responsive__heading">Frequency in days </span>
-                {{ prescription.frequency }} <a href="{% url 'editfrequency' prescription_id=prescription.id %}">Change
+                {{ prescription.frequency }} <a id="changeReference{{ forloop.counter }}" href="{% url 'editfrequency' prescription_id=prescription.id %}">Change
                     <span class="nhsuk-u-visually-hidden"> frequency of prescription {{ forloop.counter }}</span>
                 </a>
             </td>
@@ -58,13 +58,13 @@
                 <span class="nhsuk-table-responsive__heading">Items </span>
                 <ul class="nhsuk-list">
                     {% for quantity in prescription.quantity_set.all %}
-                    <li>{{ quantity.drug.name }}</li>
+                    <li id="item{{ forloop.parentloop.counter }}-{{ forloop.counter }}">{{ quantity.drug.name }}</li>
                     {% endfor %}
                 </ul>
             </td>
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Action </span>
-                <a href="{% url 'prescription' prescription_id=prescription.id %}">View
+                <a id="viewLink{{ forloop.counter }}" href="{% url 'prescription' prescription_id=prescription.id %}">View
                     <span class="nhsuk-u-visually-hidden"> prescription {{ forloop.counter }}</span>
                 </a>
             </td>
@@ -84,7 +84,7 @@
 <p class="nhsuk-body">If you've added all of your prescriptions, the button below 
     will generate your prescription synchronisation request.</p>
 
-<a class="nhsuk-button" href="{% url 'calculate' %}">Submit</a>
+<a class="nhsuk-button" id="submit" href="{% url 'calculate' %}">Submit</a>
 {% endif %}
 
 {% endblock %}

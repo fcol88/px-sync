@@ -6,7 +6,7 @@
 {% block content %}
 
 {% if messages %}
-<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+<div id="errorPane" class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
     <h2 class="nhsuk-error-summary__title" id="error-summary-title">
         There is a problem
     </h2>
@@ -47,7 +47,7 @@
             autocomplete="off">
     </div>
 
-    <button class="nhsuk-button" type="submit">Save</button>
+    <button class="nhsuk-button" id="save" type="submit">Save</button>
 
 </form>
 

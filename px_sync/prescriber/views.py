@@ -58,8 +58,6 @@ def request_search(request):
                 'search' : search_term
             })
 
-        print(sync_request.id)
-
         return redirect('viewrequest', sync_id=sync_request.id)
 
     return render(request, 'prescriber/search.html')

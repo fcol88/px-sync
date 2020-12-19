@@ -7,7 +7,7 @@
 {% block content %}
 
 {% if status != 'ok' %}
-<div class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
+<div id="errorPane" class="nhsuk-error-summary" aria-labelledby="error-summary-title" role="alert" tabindex="-1">
     <h2 class="nhsuk-error-summary__title" id="error-summary-title">
         There is a problem
     </h2>
@@ -49,7 +49,7 @@
     <li>The period which your prescription covers (i.e. the repeat cycle)</li>
 </ul>
 
-<a class="nhsuk-button" href="{% url 'reference' %}">Start now</a>
+<a class="nhsuk-button" id="startLink" href="{% url 'reference' %}">Start now</a>
 
 <h2 class="nhsuk-body">If you've used this service before</h2>
 
@@ -79,7 +79,7 @@
             aria-describedby="reference-hint{% if status != 'ok' %} reference-error{% endif %}">
     </div>
 
-    <button class="nhsuk-button nhsuk-button--secondary" type="submit">Continue</button>
+    <button class="nhsuk-button nhsuk-button--secondary" id="continueLink" type="submit">Continue</button>
 
 </form>
 

@@ -30,14 +30,14 @@ class LoginJourney(StaticLiveServerTestCase):
     @tag('journey','login')
     def test_login_page_renders(self):
         """when the user visits the login page, the page renders correctly"""
-        self.driver.get("http://localhost:8000/prescriber/login")
+        self.driver.get(self.live_server_url+"/prescriber/login")
         self.assertIn("Prescription Synchronisation Requests", self.driver.title)
 
     @tag('journey','login')
     def test_search_redirects_to_login(self):
         """when the user visits the login page and logs in, they are redirected
         to the search page"""
-        self.driver.get("http://localhost:8000/prescriber/search")
+        self.driver.get(self.live_server_url+"/prescriber/search")
 
         self.assertIn("Prescription Synchronisation Requests",
         self.driver.title)
@@ -46,7 +46,7 @@ class LoginJourney(StaticLiveServerTestCase):
     def test_view_redirects_to_login(self):
         """when the user visits the view page when unauthenticated,
         they are redirected to the login page"""
-        self.driver.get("http://localhost:8000/prescriber/view/1")
+        self.driver.get(self.live_server_url+"/prescriber/view/1")
 
         self.assertIn("Prescription Synchronisation Requests",
         self.driver.title)

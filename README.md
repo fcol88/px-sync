@@ -8,6 +8,8 @@ The application is designed to be used by patients for inputting their prescript
 
 There are several steps involved in getting the application running, depending on your use-case. To just get the application running locally, follow the local installation section. If you're interested in testing, deploying, or customising the application styling/recompiling the NHS.UK toolkit, there are corresponding sections for these areas.
 
+An sqlite database is provided for convenience with one test-run of the database, though you'll need to create a superuser (as detailed below) to use the prescriber app.
+
 ### Prerequisites
 
 This guide assumes that:
@@ -48,20 +50,26 @@ This guide assumes that:
 
    Provide a username, password and optionally an email address.
 
-5. Run the server
+5. Collect the static resources used by all applications
+
+   ```
+   python manage.py collectstatic
+   ```
+
+6. Run the server
 
    ```python
    python px_sync/manage.py runserver # from root, or...
    python manage.py runserver # from px_sync subfolder
    ```
 
-6. Visit application
+7. Visit application
 
    There are three URLs of particular importance, these are:
 
    - http://127.0.0.1:8000/prescriptions/start - The public-facing synchronisation app. No login is required, simply follow the journey through to input prescription information.
-   - http://127.0.0.1/prescriber/login - The authenticated application. If you've set up a user, you can log in and search for any synchronisation requests that you've created.
-   - http://127.0.0.1/manage - The standard django administration application. As user access will be gated to only prescribers, this is used to add users to the system.
+   - http://127.0.0.1:8000/prescriber/login - The authenticated application. If you've set up a user, you can log in and search for any synchronisation requests that you've created.
+   - http://127.0.0.1:8000/manage - The standard django administration application. As user access will be gated to only prescribers, this is used to add users to the system.
 
 ### Testing the application
 
@@ -131,7 +139,30 @@ Note: As per NHS.UK guidance, the assets and JS files are grabbed directly from 
 
 ### Deploying the application
 
-TBC
+These instructions assume you've followed the previous instructions, i.e. that you have a copy of the pxSync repository and that you're in the root of your local repo.
+
+1. If you don't have it installed, install the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) and log in
+
+2. If there isn't already a heroku application (i.e. this is a new instance), create an app using:
+
+   ```
+   heroku create appname
+   ```
+
+3. Push to the heroku repository:
+
+   ```
+   git push heroku main
+   ```
+
+4. If this is a new instance, you'll need to instantiate the database and create at least one user:
+
+   ```
+   heroku run px_sync/manage.py migrate
+   heroku run px_sync/manage.py createsuperuser
+   ```
+
+   
 
 ## Built with
 

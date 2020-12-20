@@ -1,1 +1,1 @@
-web: gunicorn px_sync.px_sync.wsgi
+web: cd px_sync && gunicorn px_sync.wsgi

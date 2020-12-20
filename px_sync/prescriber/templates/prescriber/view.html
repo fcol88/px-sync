@@ -8,6 +8,7 @@
 
 <h2 class="nhsuk-header-l">Calculated items for prescription request</h2>
 
+{% if syncTableRequired %}
 <table class="nhsuk-table">
     <caption class="nhsuk-table__caption nhsuk-u-visually-hidden">Prescription synchronisation request</caption>
     <thead role="rowgroup" class="nhsuk-table__head">
@@ -21,18 +22,21 @@
         </tr>
     </thead>
     <tbody class="nhsuk-table__body">
-        {% for prescription in syncRequest.prescription_set.all %}
-        {% for quantity in prescription.quantity_set.all %}
-        {% if quantity.required != 0 %}
+        {% for quantity in syncTableRequired %}
         <tr role="row" class="nhsuk-table__row">
             <td class="nhsuk-table__cell">{{ quantity.drug.name }}</td>
             <td class="nhsuk-table__cell ">{{ quantity.required }}</td>
         </tr>
-        {% endif %}
-        {% endfor %}
         {% endfor %}
     </tbody>
 </table>
+{% else %}
+<div class="nhsuk-inset-text">
+    <span class="nhsuk-u-visually-hidden">Information: </span>
+    <p>These prescriptions do not required synchronisation. If you believe the data entered is incorrect,
+        advise the patient to update the information shown below.</p>
+  </div>
+{% endif %}
 
 <table role="table" class="nhsuk-table-responsive">
     <caption class="nhsuk-table__caption">Patient-entered prescription data</caption>

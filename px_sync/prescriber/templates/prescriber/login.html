@@ -31,7 +31,15 @@
 
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
         <label class="nhsuk-label" for="username">Username</label>
-        <input class="nhsuk-input nhsuk-input--width-20" id="username" name="username" type="text" autocomplete="off"/>
+        <span class="nhsuk-error-message" id="username-error">
+        {% if messages %}
+            {% for message in messages %}
+            <span class="nhsuk-u-visually-hidden">Error:</span>{{ message }}
+            {% endfor %}
+        </span>
+        {% endif %}
+        <input class="nhsuk-input nhsuk-input--width-20" id="username" name="username" type="text" autocomplete="off"
+        {% if messages %}aria-describedby="username-error"{% endif %}/>
     </div>
 
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">

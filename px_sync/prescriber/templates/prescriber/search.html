@@ -30,8 +30,16 @@
     {% csrf_token %}
 
     <div class="nhsuk-form-group {% if messages %}nhsuk-form-group--error{% endif %}">
+        {% if messages %}
+        <span class="nhsuk-error-message" id="search-error">
+            {% for message in messages %}
+            <span class="nhsuk-u-visually-hidden">Error:</span>{{ message }}
+            {% endfor %}
+        </span>
+        {% endif %}
         <label class="nhsuk-label" for="search">Request reference</label>
-        <input class="nhsuk-input nhsuk-input--width-10" id="search" name="search" type="text" autocomplete="off"/>
+        <input class="nhsuk-input nhsuk-input--width-10" id="search" name="search" type="text" autocomplete="off"
+        {% if messages %}aria-describedby="search-error"{% endif %}/>
     </div>
 
     <button class="nhsuk-button" id="searchButton" type="submit">Search</button>

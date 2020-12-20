@@ -6,7 +6,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from prescriptions.models import SyncRequest
+from prescriptions.models import SyncRequest, Quantity
 
 def login_page(request):
     """
@@ -24,8 +24,6 @@ def login_page(request):
 
         messages.add_message(request, messages.WARNING,
         "Username or password is incorrect")
-
-        return redirect('login')
 
     return render(request, 'prescriber/login.html')
 
@@ -70,6 +68,13 @@ def view_request(request, sync_id):
 
     sync_request = SyncRequest.objects.get(id=sync_id)
 
+    # get a list of items with non-zero required amounts
+    # used to check if a table is needed
+    sync_table_required = Quantity.objects.filter(
+        prescription__in=sync_request.prescription_set.all()).filter(
+            required__gt=0)
+
     return render(request, 'prescriber/view.html', {
-        'syncRequest' : sync_request
+        'syncRequest' : sync_request,
+        'syncTableRequired' : sync_table_required
     })

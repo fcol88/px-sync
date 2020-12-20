@@ -1,8 +1,19 @@
 {% extends "base.html" %}
 
 {% block title %}Prescription synchronisation request{% endblock %}
-{% block pagetitle %}Prescription synchronisation request ({{ syncRequest.reference }}){% endblock %}
 
+{% block breadcrumbs %}
+<nav class="nhsuk-breadcrumb" aria-label="Breadcrumb">
+    <div class="nhsuk-width-container">
+        <ol class="nhsuk-breadcrumb__list">
+            <li class="nhsuk-breadcrumb__item"><a class="nhsuk-breadcrumb__link" href="{% url 'search' %}">Search</a></li>
+            <li class="nhsuk-breadcrumb__item">View request</li>
+          </ol>
+    </div>
+</nav>
+{% endblock %}
+
+{% block pagetitle %}Prescription synchronisation request ({{ syncRequest.reference }}){% endblock %}
 
 {% block content %}
 
@@ -35,7 +46,7 @@
     <span class="nhsuk-u-visually-hidden">Information: </span>
     <p>These prescriptions do not required synchronisation. If you believe the data entered is incorrect,
         advise the patient to update the information shown below.</p>
-  </div>
+</div>
 {% endif %}
 
 <table role="table" class="nhsuk-table-responsive">
@@ -75,7 +86,7 @@
             <td role="cell" class="nhsuk-table__cell">
                 <span class="nhsuk-table-responsive__heading">Dosage </span>
                 {% if quantity.dosage != -1 %}
-                    {{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}
+                {{ quantity.dosage }} per {% if quantity.period == 1 %}day{% else %}week{% endif %}
                 {% endif %}
             </td>
             <td role="cell" class="nhsuk-table__cell">

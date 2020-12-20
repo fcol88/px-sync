@@ -10,7 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
-import django-on-heroku
+import django_on_heroku
 from pathlib import Path
 import os
 
@@ -140,4 +140,4 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 SESSION_COOKIE_AGE = 3600 #one hour
 
-django_heroku.settings(locals())
+django_on_heroku.settings(locals())
